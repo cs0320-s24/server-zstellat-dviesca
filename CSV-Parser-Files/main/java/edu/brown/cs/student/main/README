@@ -1,0 +1,37 @@
+Sprint 1 CSV Project
+@author zstellat
+
+Contributions:
+Worked with dviesca on conceptual issues during collab hours. We met up later to continue
+discussing. Helped me to come up with the idea
+
+This video taught me how to use a scanner to record user inputs -
+https://www.youtube.com/watch?v=Qmrani-7VCw
+
+Repo: https://github.com/cs0320-s24/csv-thezooenator.git
+
+
+--Design Choices--
+I chose to create two classes that deal with the CSV file. A Parser and a Searcher class. In order
+to pass enough info between them, I used a record called ParsedDataPacket which was returned from
+the Parser and passed as a parameter into the Searcher. I felt this offered a lot of functionality
+for users who maybe just wanted to see their parsed results. It also helped to fix the issue of
+headers needing to be removed from the parsed rows output. (If you send a string header into the
+RowOperator type that converts the row into List<Integer> then you would have an issue if you send
+in headers that had names).
+
+Another issue that wasn't exactly specified was that if you were to try to search for a Star object.
+Unlike User 1, who wants to search through List<String> objects, the Star would be searching
+through Star objects. If you tried to iterate through the Star object like you might do with the
+List<String> object, you would have issues. That's when I realized that the search method for each
+individual row was specific to each ConvetFromRow type, so I changed ConvertFromRow into RowOperator
+and I added searchRow method to it. This allowed each implementer of the system to decide how the
+program should parse through their specific Object type. This added a ton of work but I think it's
+really cool.
+
+For User 1, I made a separate class called csvFileUtility that easily communicates with the main
+method to take user input and apply it to the specific case of List<String> searching without making
+the user do brunt code work.
+
+--Bugs--
+The 
