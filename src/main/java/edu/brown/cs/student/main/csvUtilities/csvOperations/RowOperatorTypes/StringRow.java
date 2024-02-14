@@ -1,6 +1,6 @@
-package edu.brown.cs.student.main.csvOperations.RowOperatorTypes;
+package edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes;
 
-import edu.brown.cs.student.main.csvOperations.Exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
 import java.util.List;
 
 public class StringRow implements RowOperator<List<String>, String> {

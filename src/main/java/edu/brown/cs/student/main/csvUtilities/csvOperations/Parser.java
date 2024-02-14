@@ -1,7 +1,7 @@
-package edu.brown.cs.student.main.csvOperations;
+package edu.brown.cs.student.main.csvUtilities.csvOperations;
 
-import edu.brown.cs.student.main.csvOperations.Exceptions.FactoryFailureException;
-import edu.brown.cs.student.main.csvOperations.RowOperatorTypes.RowOperator;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.RowOperator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;

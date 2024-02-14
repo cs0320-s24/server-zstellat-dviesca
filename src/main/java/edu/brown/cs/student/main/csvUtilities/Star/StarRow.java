@@ -1,9 +1,9 @@
-package edu.brown.cs.student.main.Star;
+package edu.brown.cs.student.main.csvUtilities.Star;
 
 import static java.lang.Integer.parseInt;
 
-import edu.brown.cs.student.main.csvOperations.Exceptions.FactoryFailureException;
-import edu.brown.cs.student.main.csvOperations.RowOperatorTypes.RowOperator;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.RowOperator;
 import java.util.List;
 
 /**

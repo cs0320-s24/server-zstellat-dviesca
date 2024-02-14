@@ -1,11 +1,11 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.csvUtilities;
 
-import edu.brown.cs.student.main.csvOperations.Exceptions.FactoryFailureException;
-import edu.brown.cs.student.main.csvOperations.Exceptions.RestartLoopException;
-import edu.brown.cs.student.main.csvOperations.ParsedDataPacket;
-import edu.brown.cs.student.main.csvOperations.Parser;
-import edu.brown.cs.student.main.csvOperations.RowOperatorTypes.StringRow;
-import edu.brown.cs.student.main.csvOperations.Searcher;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.RestartLoopException;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.ParsedDataPacket;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Parser;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.StringRow;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Searcher;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;

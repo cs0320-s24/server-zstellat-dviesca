@@ -1,11 +1,13 @@
 package edu.brown.cs.student.main.server;
 
+import spark.Spark;
+
 public class Server {
 
 
   public static void main(String[] args) {
-    System.out.println("Hello");
-
+    int port = 3232;
+    Spark.port(port);
 
   }
 }

@@ -1,12 +1,12 @@
-package edu.brown.cs.student.csvOperations;
+package edu.brown.cs.student.csvUtilities.csvOperations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.brown.cs.student.main.csvOperations.Exceptions.FactoryFailureException;
-import edu.brown.cs.student.main.csvOperations.ParsedDataPacket;
-import edu.brown.cs.student.main.csvOperations.Parser;
-import edu.brown.cs.student.main.csvOperations.RowOperatorTypes.IntegerRow;
-import edu.brown.cs.student.main.csvOperations.RowOperatorTypes.StringRow;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.ParsedDataPacket;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Parser;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.IntegerRow;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.StringRow;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;

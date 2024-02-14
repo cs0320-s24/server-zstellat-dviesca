@@ -1,32 +1,21 @@
-package edu.brown.cs.student.main.csvOperations.RowOperatorTypes;
+package edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes;
 
-import static java.lang.Integer.parseInt;
-
-import edu.brown.cs.student.main.csvOperations.Exceptions.FactoryFailureException;
-import java.util.ArrayList;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
 import java.util.List;
 
-/** This is a implementation of RowOperator that creates a list of integers in each row */
-public class IntegerRow implements RowOperator<List<Integer>, Integer> {
+/**
+ * This interface defines a method that allows your CSV parser to convert each row into an object of
+ * some arbitrary passed type. It also defines two methods with slightly different parameters that
+ * allow the CSV searcher to search each row of some arbitrary passed type -T- in a way specific to
+ * that searchObject of data type -J-. -J- is the type of data that the user is searching to match.
+ * To avoid errors, ensure the search function correctly utilizes type -J- (e.g. use .equals for
+ * strings and for integers but not when trying to compare an object inside a list to a list. Should
+ * search the list by iterating through it and comparing each object). NOTE: if search functionality
+ * is not necessary, -J- parameter can be any type (e.g. -Object-)
+ */
+public interface RowOperator<T, J> {
 
-  /**
-   * Constructor for a row of Strings. This is so you can pass what object type is desired into the
-   * parser.
-   */
-  public IntegerRow() {}
-
-  @Override
-  public List<Integer> create(List<String> row) throws FactoryFailureException {
-    List<Integer> intList = new ArrayList<>();
-    try {
-      for (String s : row) {
-        intList.add(parseInt(s));
-      }
-    } catch (NumberFormatException e) {
-      throw new FactoryFailureException("Error: RowOperator failed to parse this row: " + row);
-    }
-    return intList;
-  }
+  T create(List<String> row) throws FactoryFailureException;
 
   /**
    * This method is called when a row of type -T- is searched. This version of the search method
@@ -40,17 +29,14 @@ public class IntegerRow implements RowOperator<List<Integer>, Integer> {
    * @param searchIndex the index of the column to search through, as passed by the caller of the
    *     Search method and matched to a certain header.
    * @return rowToCheck if the row matches/contains the searchObject and null if it doesn't.
+   * @throws FactoryFailureException Implement this method by throwing FactoryFailureException if
+   *     the arbitrary type -T- is not compatible with searching by index (e.g. only one object per
+   *     row).
    * @throws IllegalArgumentException if the passed types -T- or -J- are not compatible with the
    *     searchRow functionality
    */
-  @Override
-  public List<Integer> searchRow(List<Integer> rowToCheck, Integer searchObject, int searchIndex) {
-    if (searchObject.equals(rowToCheck.get(searchIndex))) {
-      return rowToCheck;
-    } else {
-      return null;
-    }
-  }
+  T searchRow(T rowToCheck, J searchObject, int searchIndex)
+      throws FactoryFailureException, IllegalArgumentException;
 
   /**
    * This method is called when a row of type -T- is searched. This version of the search method
@@ -65,14 +51,5 @@ public class IntegerRow implements RowOperator<List<Integer>, Integer> {
    * @throws IllegalArgumentException if the passed types -T- or -J- are not compatible with the
    *     searchRow functionality
    */
-  @Override
-  public List<Integer> searchRow(List<Integer> rowToCheck, Integer searchObject) {
-
-    for (int i : rowToCheck) {
-      if (searchObject.equals(i)) {
-        return rowToCheck;
-      }
-    }
-    return null;
-  }
+  T searchRow(T rowToCheck, J searchObject) throws IllegalArgumentException;
 }

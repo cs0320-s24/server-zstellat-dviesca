@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.Star;
+package edu.brown.cs.student.main.csvUtilities.Star;
 
 /**
  * Record holding info about Star object
