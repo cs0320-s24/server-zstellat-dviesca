@@ -7,8 +7,12 @@ import edu.brown.cs.student.main.csvUtilities.csvOperations.ParsedDataPacket;
 import edu.brown.cs.student.main.csvUtilities.csvOperations.Parser;
 import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.IntegerRow;
 import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.StringRow;
+import edu.brown.cs.student.main.csvUtilities.csvOperations.Searcher;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,6 +32,42 @@ class ParserTest {
     this.csvContentHeader = "Name,Age,Location\nJohn,25,New York\nJane,30,San Francisco";
     this.csvContentNoHeader = "John,25,New York\nJane,30,San Francisco";
   }
+
+
+  // Tests to see if the CSV Parser can read the RI census data file
+  @Test
+  void testRIDataFile() throws FactoryFailureException, IOException {
+    Parser<List<String>, String> parser = new Parser<>();
+    Searcher<List<String>, String> searcher = new Searcher<>();
+
+    FileReader riCSVData = new FileReader("/Users/zach.stellato/Documents/Code/cs0320/"
+        + "server-zstellat-dviesca/data/RI/RI City & Town Income from American Community Survey "
+        + "5-Year Estimates Source_ US Census Bureau, 2017-2021 American Community Survey 5-Year "
+        + "Estimates 2017-2021 - Sheet1.csv");
+
+    ParsedDataPacket<List<String>, String> packet =
+        parser.parse(new StringRow(), riCSVData, true);
+
+    List<String> expectedData = new ArrayList<>();
+    expectedData.add("Exeter");
+    expectedData.add("\"95,053.00\"");
+    expectedData.add("\"116,894.00\"");
+    expectedData.add("\"41,058.00\"");
+    List<List<String>> expectedOutput = new ArrayList<>();
+    expectedOutput.add(expectedData);
+
+    List<List<String>> actualOutput = searcher.search(packet, "Exeter", "City/Town");
+
+    assertEquals(expectedOutput, actualOutput);
+
+  }
+
+
+
+
+
+
+
 
   // Tests if it parses the data correctly with headers
   @Test

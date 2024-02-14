@@ -63,4 +63,20 @@ public class Parser<T, J> {
     // Creates a data packet and returns it to the caller. Note: headers may be empty
     return new ParsedDataPacket<>(rowType, parsedRows, containsHeaders, headers);
   }
+
+  /**
+   * This line helps to parse the individual lines from the csv
+   * @param line the string of the line that needs to be parsed
+   * @return an arraylist with the strings split by the commas
+   */
+  private List<String> LineParse(String line) {
+    ArrayList<String> lineStrings = new ArrayList<>();
+    int start = 0;
+    boolean inQuotation = false;
+
+    for (int c = 0; c < line.length(); c++) {
+      if (line.charAt(c) == '\"') { inQuotation = !inQuotation
+    }
+
+  }
 }
