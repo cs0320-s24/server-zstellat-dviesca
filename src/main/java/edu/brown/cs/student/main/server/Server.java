@@ -6,7 +6,9 @@ import spark.Spark;
 
 public class Server {
 
-  public static void main(String[] args) { new Server(args).run(); }
+  public static void main(String[] args) {
+    new Server(args).run();
+  }
 
   private Server(String[] args) {}
 
