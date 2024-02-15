@@ -2,23 +2,17 @@ package edu.brown.cs.student.csv.csvoperations.rowoperations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
 import edu.brown.cs.student.main.csv.csvoperations.Parser;
 import edu.brown.cs.student.main.csv.csvoperations.Searcher;
 import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import edu.brown.cs.student.main.csv.csvoperations.rowoperations.IntegerRow;
-import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 
 public class IntegerRowTest {
   // Test basic parse functionality

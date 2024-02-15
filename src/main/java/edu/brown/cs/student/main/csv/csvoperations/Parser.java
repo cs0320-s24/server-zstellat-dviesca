@@ -20,7 +20,7 @@ public class Parser<T, J> {
 
   // A simple compiler given by the cs320 gods, removes commas but not if they're in quotes
   static final Pattern regexSplitCSVRow =
-      Pattern.compile(",(?=([^\\\"]*\\\"[^\\\"]*\\\")*(?![^\\\"]*\\\"))");
+      Pattern.compile("\\s*,\\s*(?=([^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
   /**
    * This method takes a CSV file in the reader form and converts it into a list of objects of type
@@ -58,6 +58,7 @@ public class Parser<T, J> {
       }
     }
 
+    // reads each line and converts them into rowOperator types until no rows are left
     while ((line = buffReader.readLine()) != null) {
       // Splits the string of each row, removes spaces, and splits it by ","
       List<String> row = Arrays.asList(regexSplitCSVRow.split(line));

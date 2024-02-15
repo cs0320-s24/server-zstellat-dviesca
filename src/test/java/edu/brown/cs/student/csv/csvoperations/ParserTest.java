@@ -45,11 +45,10 @@ class ParserTest {
         new FileReader(
             "/Users/zach.stellato/Documents/Code/cs0320/"
                 + "server-zstellat-dviesca/data/RI/RI City & Town Income from American Community Survey "
-                + "5-Year Estimates Source_ US Census Bureau, 2017-2021 American Community Survey 5 - Year"
-            + "Estimates 2017-2021 - Sheet1.csv");
+                + "5-Year Estimates Source_ US Census Bureau, 2017-2021 American Community Survey 5-Year "
+                + "Estimates 2017-2021 - Sheet1.csv");
 
-    ParsedDataPacket<List<String>, String> packet = parser.parse(new StringRow(), riCSVData,
-        true);
+    ParsedDataPacket<List<String>, String> packet = parser.parse(new StringRow(), riCSVData, true);
 
     List<String> expectedData = new ArrayList<>();
     expectedData.add("Exeter");
@@ -102,7 +101,6 @@ class ParserTest {
 
   // Tests if it returns the correct error if the data doesn't work with the RowOperator converter
   @Test
-
   void testParseIncompatibleRowOperator() throws FactoryFailureException, IOException {
     Parser<List<Integer>, Integer> parser = new Parser<>();
 
@@ -111,13 +109,12 @@ class ParserTest {
             FactoryFailureException.class,
             () -> {
               ParsedDataPacket<List<Integer>, Integer> packet =
-                  parser.parse(new IntegerRow(), new StringReader(this.csvContentNoHeader),
-                      false);
+                  parser.parse(new IntegerRow(), new StringReader(this.csvContentNoHeader), false);
             });
 
     String expectedMessage =
         ("Error: RowOperator failed to parse this row: " + Arrays.asList("John", "25", "New York"));
-            String actualMessage = exception.getMessage();
+    String actualMessage = exception.getMessage();
 
     assertEquals(expectedMessage, actualMessage);
   }

@@ -18,8 +18,12 @@ public class IntegerRow implements RowOperator<List<Integer>, Integer> {
   @Override
   public List<Integer> create(List<String> row) throws FactoryFailureException {
     List<Integer> intList = new ArrayList<>();
+    // TODO: ++++++++++++++ TESTING +++++++++++++++++
+    System.out.println("Row to check: (" + row + ")");
     try {
       for (String s : row) {
+        // TODO: ++++++++++++++ TESTING +++++++++++++++++
+        System.out.println("String: (" + s + ")");
         intList.add(parseInt(s));
       }
     } catch (NumberFormatException e) {
