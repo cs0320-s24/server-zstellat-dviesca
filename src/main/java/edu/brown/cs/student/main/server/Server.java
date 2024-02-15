@@ -2,7 +2,14 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
+import edu.brown.cs.student.main.census.CSVHandler;
+import edu.brown.cs.student.main.census.CensusAPIUtilities;
+import edu.brown.cs.student.main.census.CensusData;
+import edu.brown.cs.student.main.census.CensusHandler;
 import spark.Spark;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Server {
 
@@ -23,18 +30,26 @@ public class Server {
           response.header("Access-Control-Allow-Methods", "*");
         });
 
-    //    // Reading the JSON
-    //    // TODO: modify from String menuAsJson = SoupAPIUtilities.readInJson("data/menu.json");
-    //    // to include where the census data is coming from
-    //    String filepath =
-    //    String dataAsJson = CensusAPIUtilities.readInJson(); //TODO: find how to manage the
-    // filepath
-    //    //deserializing
-    //    try{
-    //      //TODO create a deserialoize X DATA method
-    //
-    //      String dataAsJson = CensusAPIUtilities.readInJson(())
-    //    }
+    // Reading the JSON
+    // TODO: modify from String menuAsJson = SoupAPIUtilities.readInJson("data/menu.json");
+    // to include where the census data is coming from
+    String filepath = "TODO"; // TODO: find a way so local and api gotten data can be hosted
+    String dataAsJson = CensusAPIUtilities.readInJson(filepath); //TODO: find how to manage the
+    List<CensusData> censusDataList =  new ArrayList<>();
+    //deserializing
+    try{
+      censusDataList = CensusAPIUtilities.deserializeCensus(dataAsJson);
+    } catch (Exception e){ //TODO manage the error more satisfactory as the handout/gearup says or as a log
+      e.printStackTrace();
+      System.err.println("Errored while deserializing the census data"); //TODO this is wrong
+    }
 
+    //setup the handlers for the GET of TODO might have to chane the name
+    Spark.get("csvOperations", new CSVHandler());// TODO for the csvoperations case
+    Spark.get("censusOperations", new CensusHandler());// TODO for the censusoperations case
+    Spark.init();
+    Spark.awaitInitialization();
+
+    System.out.println("Server started at http://localhost:" + port);
   }
 }
