@@ -2,13 +2,12 @@ package edu.brown.cs.student.csvUtilities.csvOperations;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.ParsedDataPacket;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.Parser;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.IntegerRow;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.StringRow;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.Searcher;
-import java.io.File;
+import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
+import edu.brown.cs.student.main.csv.csvoperations.Parser;
+import edu.brown.cs.student.main.csv.csvoperations.rowoperations.IntegerRow;
+import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
+import edu.brown.cs.student.main.csv.csvoperations.Searcher;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -33,20 +32,20 @@ class ParserTest {
     this.csvContentNoHeader = "John,25,New York\nJane,30,San Francisco";
   }
 
-
   // Tests to see if the CSV Parser can read the RI census data file
   @Test
   void testRIDataFile() throws FactoryFailureException, IOException {
     Parser<List<String>, String> parser = new Parser<>();
     Searcher<List<String>, String> searcher = new Searcher<>();
 
-    FileReader riCSVData = new FileReader("/Users/zach.stellato/Documents/Code/cs0320/"
-        + "server-zstellat-dviesca/data/RI/RI City & Town Income from American Community Survey "
-        + "5-Year Estimates Source_ US Census Bureau, 2017-2021 American Community Survey 5-Year "
-        + "Estimates 2017-2021 - Sheet1.csv");
+    FileReader riCSVData =
+        new FileReader(
+            "/Users/zach.stellato/Documents/Code/cs0320/"
+                + "server-zstellat-dviesca/data/RI/RI City & Town Income from American Community Survey "
+                + "5-Year Estimates Source_ US Census Bureau, 2017-2021 American Community Survey 5-Year "
+                + "Estimates 2017-2021 - Sheet1.csv");
 
-    ParsedDataPacket<List<String>, String> packet =
-        parser.parse(new StringRow(), riCSVData, true);
+    ParsedDataPacket<List<String>, String> packet = parser.parse(new StringRow(), riCSVData, true);
 
     List<String> expectedData = new ArrayList<>();
     expectedData.add("Exeter");
@@ -59,15 +58,7 @@ class ParserTest {
     List<List<String>> actualOutput = searcher.search(packet, "Exeter", "City/Town");
 
     assertEquals(expectedOutput, actualOutput);
-
   }
-
-
-
-
-
-
-
 
   // Tests if it parses the data correctly with headers
   @Test

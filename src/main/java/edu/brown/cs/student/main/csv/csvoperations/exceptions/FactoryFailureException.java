@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions;
+package edu.brown.cs.student.main.csv.csvoperations.exceptions;
 
 /**
  * This is an error provided to catch any error that may occur when you create an object from a row.

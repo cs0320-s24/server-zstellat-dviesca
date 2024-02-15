@@ -1,6 +1,6 @@
-package edu.brown.cs.student.main.csvUtilities.csvOperations;
+package edu.brown.cs.student.main.csv.csvoperations;
 
-import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import java.util.ArrayList;
 import java.util.List;
 

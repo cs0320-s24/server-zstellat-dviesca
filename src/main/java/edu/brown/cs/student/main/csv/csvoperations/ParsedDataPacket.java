@@ -1,6 +1,6 @@
-package edu.brown.cs.student.main.csvUtilities.csvOperations;
+package edu.brown.cs.student.main.csv.csvoperations;
 
-import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.RowOperator;
+import edu.brown.cs.student.main.csv.csvoperations.rowoperations.RowOperator;
 import java.util.ArrayList;
 import java.util.List;
 

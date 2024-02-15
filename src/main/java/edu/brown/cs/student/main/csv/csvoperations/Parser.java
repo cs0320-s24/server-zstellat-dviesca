@@ -1,13 +1,14 @@
-package edu.brown.cs.student.main.csvUtilities.csvOperations;
+package edu.brown.cs.student.main.csv.csvoperations;
 
-import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.RowOperator;
+import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csv.csvoperations.rowoperations.RowOperator;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @param <T> is the type that the user wants to convert their rows into using an implementation of
@@ -16,6 +17,10 @@ import java.util.List;
  *     functionality is not necessary, any type can be inputted (e.g. -Object-)
  */
 public class Parser<T, J> {
+
+  // A simple compiler given by the cs320 gods, removes commas but not if they're in quotes
+  static final Pattern regexSplitCSVRow =
+      Pattern.compile(",(?=([^\\\"]*\\\"[^\\\"]*\\\")*(?![^\\\"]*\\\"))");
 
   /**
    * This method takes a CSV file in the reader form and converts it into a list of objects of type
@@ -49,34 +54,18 @@ public class Parser<T, J> {
     if (containsHeaders) {
       // Ensures that the first line isn't worked on if it's empty/null
       if ((line = buffReader.readLine()) != null) {
-        headers = new ArrayList<>(Arrays.asList(line.split("\\s*,\\s*")));
+        headers = new ArrayList<>(Arrays.asList(regexSplitCSVRow.split(line)));
       }
     }
 
     while ((line = buffReader.readLine()) != null) {
       // Splits the string of each row, removes spaces, and splits it by ","
-      List<String> row = Arrays.asList(line.split("\\s*,\\s*"));
+      List<String> row = Arrays.asList(regexSplitCSVRow.split(line));
 
       // Adds the converted row object to the list of parsed rows
       parsedRows.add(rowType.create(row));
     }
     // Creates a data packet and returns it to the caller. Note: headers may be empty
     return new ParsedDataPacket<>(rowType, parsedRows, containsHeaders, headers);
-  }
-
-  /**
-   * This line helps to parse the individual lines from the csv
-   * @param line the string of the line that needs to be parsed
-   * @return an arraylist with the strings split by the commas
-   */
-  private List<String> LineParse(String line) {
-    ArrayList<String> lineStrings = new ArrayList<>();
-    int start = 0;
-    boolean inQuotation = false;
-
-    for (int c = 0; c < line.length(); c++) {
-      if (line.charAt(c) == '\"') { inQuotation = !inQuotation
-    }
-
   }
 }

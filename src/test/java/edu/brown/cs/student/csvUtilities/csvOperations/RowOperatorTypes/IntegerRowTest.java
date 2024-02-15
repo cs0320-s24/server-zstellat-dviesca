@@ -3,11 +3,11 @@ package edu.brown.cs.student.csvUtilities.csvOperations.RowOperatorTypes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import edu.brown.cs.student.main.csvUtilities.csvOperations.Exceptions.FactoryFailureException;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.ParsedDataPacket;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.Parser;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.RowOperatorTypes.IntegerRow;
-import edu.brown.cs.student.main.csvUtilities.csvOperations.Searcher;
+import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
+import edu.brown.cs.student.main.csv.csvoperations.Parser;
+import edu.brown.cs.student.main.csv.csvoperations.rowoperations.IntegerRow;
+import edu.brown.cs.student.main.csv.csvoperations.Searcher;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Arrays;
