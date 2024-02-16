@@ -15,6 +15,8 @@ import java.util.List;
  * @param <T> The inputted type that each row in the csv is converted into (returned by RowOperator)
  * @param <J> The inputted type that needs to be used to search inside the row objects of type -T-
  */
+
+        }
 public record ParsedDataPacket<T, J>(
     RowOperator<T, J> rowType,
     List<T> parsedRows,

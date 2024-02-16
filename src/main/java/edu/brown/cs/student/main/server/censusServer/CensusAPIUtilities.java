@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.census;
+package edu.brown.cs.student.main.server.censusServer;
 
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonDataException;
