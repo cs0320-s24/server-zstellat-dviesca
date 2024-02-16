@@ -57,11 +57,11 @@ public class Server {
 //    }
 
     //TODO is starting as null ok? could have a constructor that makes it just have a boolean as false
-    ParsedDataPacket<List<String>, String> dataPacketDependency = null;
+    LoadHandler loadHandler = new LoadHandler(LOGGER);
 
 
     // setup the handlers for the GET of TODO might have to chane the name
-    Spark.get("load", new LoadHandler(LOGGER, dataPacketDependency)); // TODO for the csvoperations case
+    Spark.get("load"); // TODO for the csvoperations case
     Spark.get("view", new ViewHandler(LOGGER)); // TODO for the csvoperations case
     Spark.get("search", new SearchHandler(LOGGER)); // TODO for the csvoperations case
     //TODO question: is this all within the same "level" as the csv "streets" or is it in a different "category/route"

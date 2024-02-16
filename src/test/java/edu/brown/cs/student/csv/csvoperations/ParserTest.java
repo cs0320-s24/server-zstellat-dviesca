@@ -44,9 +44,7 @@ class ParserTest {
     FileReader riCSVData =
         new FileReader(
             "/Users/zach.stellato/Documents/Code/cs0320/"
-                + "server-zstellat-dviesca/data/RI/RI City & Town Income from American Community Survey "
-                + "5-Year Estimates Source_ US Census Bureau, 2017-2021 American Community Survey 5-Year "
-                + "Estimates 2017-2021 - Sheet1.csv");
+                + "server-zstellat-dviesca/data/RI_Town_Income.csv");
 
     ParsedDataPacket<List<String>, String> packet = parser.parse(new StringRow(), riCSVData, true);
 
