@@ -24,6 +24,7 @@ public class LoadHandler implements Route {
 
     public LoadHandler(Logger logger, ParsedDataPacket dataDependency) {
         LOGGER = logger;
+        dataPacket = dataDependency;
     }
 
     //TODO
@@ -35,11 +36,11 @@ public class LoadHandler implements Route {
      */
     @Override
     public Object handle(Request request, Response response) throws Exception {
-        Set<String> params = request.queryParams();
-        String  = request.queryParams(); //TODO I dont know what this actually is
-        // Creates a hashmap to store the results of the request
-        Map<String, Object> responseMap = new HashMap<>();
-
+        String route = request.queryParams("route");
+        String hasHeaderString = request.queryParams("hasHeader"); //TODO do we expect a number(1/0) or string?
+        //TODO assumes it is "true" or "false", PENDING: error checking
+        Boolean hasHeader = Boolean.parseBoolean(hasHeaderString);
+        this.loadCSV(route, hasHeader);
 
     }
     private void loadCSV(String relativeFilePath, boolean containsHeaders) throws RuntimeException {
@@ -65,5 +66,9 @@ public class LoadHandler implements Route {
         System.out.println("Just tried to load csv File path: (" + csvFilePath + ")");
         // TODO: +++++++ FOR TESTING +++++++++
     }
+
+
+
+
 
 }
