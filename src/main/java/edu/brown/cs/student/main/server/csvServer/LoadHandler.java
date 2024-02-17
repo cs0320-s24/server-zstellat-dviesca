@@ -85,7 +85,7 @@ public class LoadHandler implements Route {
             //return new LoadFailureResponse(e).serialize();
         }
 
-
+      return null;
     }
     private void loadCSV(String relativeFilePath, boolean containsHeaders) throws RuntimeException {
         this.relativePath = relativeFilePath;
@@ -115,15 +115,15 @@ public class LoadHandler implements Route {
 
     }
 
-    public record CSVNotFoundFailureResponse(String responseType) {
-        public CSVNotFoundFailureResponse() {
-            // TODO: Figure out how to pass [this.relativePath] into here
-            this("CSV file (" + this.relativePath + ")");
-        }
-
-        String Serialize() {
-            return null;
-        }
-    }
+//    public record CSVNotFoundFailureResponse(String responseType) {
+//        public CSVNotFoundFailureResponse() {
+//            // TODO: Figure out how to pass [this.relativePath] into here
+//            this("CSV file (" + this.relativePath + ")");
+//        }
+//
+//        String Serialize() {
+//            return null;
+//        }
+//    }
 
 }
