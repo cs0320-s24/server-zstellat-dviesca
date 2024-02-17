@@ -132,8 +132,8 @@ public class Searcher<T, J> {
               + "functionality implemented by the RowOperator class");
     } catch (IndexOutOfBoundsException e) {
       throw new FactoryFailureException(
-          "Error: SearchObject type not compatible with searching by column or request index (" +
-              columnIndex + ") not available in this row: " + currentRow);
+          "Error: SearchObject type not compatible with searching by column or request index: [" +
+              columnIndex + "] not available in this row: " + currentRow);
     }
     return matchingRows;
   }

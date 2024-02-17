@@ -92,7 +92,8 @@ public class SearcherTest {
               searcher.search(packet, "San Francisco", "Location");
             });
 
-    String expectedMessage = ("Error: generic type <T> does not support search by column");
+    String expectedMessage = ("Error: SearchObject type not compatible with searching by column "
+        + "or request index: [2] not available in this row: [Jane, 30]");
     String actualMessage = exception.getMessage();
 
     assertEquals(expectedMessage, actualMessage);
@@ -141,7 +142,7 @@ public class SearcherTest {
               searcher.search(result, "Twenty", "Age");
             });
 
-    String expectedMessage = ("Error: generic type <T> does not support search by column");
+    String expectedMessage = ("Error: Generic type <T> does not support search by column");
     String actualMessage = exception.getMessage();
 
     assertEquals(expectedMessage, actualMessage);

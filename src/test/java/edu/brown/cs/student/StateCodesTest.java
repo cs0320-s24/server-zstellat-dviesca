@@ -34,12 +34,13 @@ import org.junit.jupiter.api.Test;
 public class StateCodesTest {
 
 
+  // TODO: Change the parser so that it doesn't include the " " on either side of things,
+  //  --see ==> asserts in this test class (line 60-62)
   @Test
   public void stateCodeHashCheck() throws IOException, FactoryFailureException {
     FileReader stateFile = new FileReader("/Users/zach.stellato/Documents/Code/"
         + "cs0320/server-zstellat-dviesca/data/stateCodes.csv");
     Parser<List<String>, String> parser = new Parser<>();
-    Searcher<List<String>, String> searcher = new Searcher<>();
 
     ParsedDataPacket<List<String>, String> stateCodes =
         parser.parse(new StringRow(), stateFile, true);
@@ -47,18 +48,18 @@ public class StateCodesTest {
     // Don't have to worry about headers because the parser stores them separately
     List<List<String>> parsedStates = stateCodes.parsedRows();
 
-      HashMap<String, Integer> stateToNumberMap = new HashMap<>();
-      HashMap<Integer, String> numberToStateMap = new HashMap<>();
+      HashMap<String, String> stateToNumberMap = new HashMap<>();
+      HashMap<String, String> numberToStateMap = new HashMap<>();
 
     for (List<String> state : parsedStates) {
-      stateToNumberMap.put(state.get(0), Integer.parseInt(state.get(1)));
-      numberToStateMap.put(Integer.parseInt(state.get(1)), state.get(0));
+      stateToNumberMap.put(state.get(0), state.get(1));
+      numberToStateMap.put(state.get(1), state.get(0));
     }
 
-
-    assertEquals(11, stateToNumberMap.get("District of Columbia"));
-    assertEquals(12, stateToNumberMap.get("Florida"));
-    assertEquals("Hawaii", numberToStateMap.get(15));
+    // These all include the quotes but they shouldn't
+    assertEquals("\"11\"", stateToNumberMap.get("\"District of Columbia\""));
+    assertEquals("\"12\"", stateToNumberMap.get("\"Florida\""));
+    assertEquals("\"Hawaii\"", numberToStateMap.get("\"15\""));
   }
 
 
