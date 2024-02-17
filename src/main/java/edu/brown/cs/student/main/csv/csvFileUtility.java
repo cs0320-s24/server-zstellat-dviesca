@@ -34,11 +34,12 @@ public class csvFileUtility<T> {
    * @param csvName a String containing the name of the CSV file to read
    * @param containsHeaders true if the file contains headers and false if not
    * @param searchValue a String that this method is searching for within the CSV
-   * @param searchColumn a String containing the name of the header of the column that should be
-   *     searched through.
+   * @param searchColumn a String containing either, the name of the header of the column that
+   *                     should be searched through, or index of the column that should be searched
+   *                     through.
    * @throws RestartLoopException if any part of the program creates an error, this is sent after
-   *     the error is described, and it contains the error message. Restarting the loop allows the
-   *     user to re-input new arguments.
+   * the error is described, and it contains the error message. Restarting the loop allows the user
+   * to re-input new arguments.
    */
   public csvFileUtility(
       String csvName, boolean containsHeaders, String searchValue, String searchColumn)
@@ -94,7 +95,10 @@ public class csvFileUtility<T> {
    * The helper method calls the search functionality from the search class and prints out the
    * result.
    *
-   * @param hasSearchColumn true if a valid searchColumn was passed and false otherwise
+   * @param hasSearchColumn true if a search column identifier was passed and false otherwise
+   * @throws RestartLoopException if any part of the program creates an error, this is sent after
+   * the error is described, and it contains the error message. Restarting the loop allows the user
+   * to re-input new arguments.
    */
   private void SearchHelper(boolean hasSearchColumn) throws RestartLoopException {
     Searcher<List<String>, String> searcher = new Searcher<>();
@@ -106,7 +110,7 @@ public class csvFileUtility<T> {
       } else {
         result = searcher.search(this.dataPacket, this.searchValue);
       }
-    } catch (IllegalArgumentException | FactoryFailureException e) {
+    } catch (FactoryFailureException e) {
       throw new RestartLoopException(e.getMessage());
     }
 

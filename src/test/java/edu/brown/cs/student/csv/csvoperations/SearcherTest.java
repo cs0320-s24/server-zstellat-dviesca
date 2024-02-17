@@ -42,6 +42,26 @@ public class SearcherTest {
     assertEquals("[]", resultNotFound.toString());
   }
 
+
+  // Tests if it searches the data correctly by column index (test might be wrong)
+  @Test
+  void testParseByIndex() throws FactoryFailureException, IOException {
+    Parser<List<String>, String> parser = new Parser<>();
+    Searcher<List<String>, String> searcher = new Searcher<>();
+
+    ParsedDataPacket<List<String>, String> packet =
+        parser.parse(new StringRow(), new StringReader(this.csvContentHeader), true);
+
+    List<List<String>> resultFound = searcher.search(packet, "New York", "2");
+
+    List<List<String>> resultNotFound = searcher.search(packet, "New York", "1");
+
+    assertEquals("[[John, 25, New York]]", resultFound.toString());
+    assertEquals("[]", resultNotFound.toString());
+  }
+
+
+
   // if CSV is empty
   @Test
   void testSearchWithEmptyCSV() throws FactoryFailureException, IOException {

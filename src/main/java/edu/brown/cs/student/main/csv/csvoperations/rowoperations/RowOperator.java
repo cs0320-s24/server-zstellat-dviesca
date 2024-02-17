@@ -27,16 +27,17 @@ public interface RowOperator<T, J> {
    * @param searchObject A generic object of type -J-, must be handled differently by each
    *     implementation of search.
    * @param searchIndex the index of the column to search through, as passed by the caller of the
-   *     Search method and matched to a certain header.
+   *     Search method and matched to a certain header/index.
    * @return rowToCheck if the row matches/contains the searchObject and null if it doesn't.
    * @throws FactoryFailureException Implement this method by throwing FactoryFailureException if
    *     the arbitrary type -T- is not compatible with searching by index (e.g. only one object per
-   *     row).
+   *     row). Or if index is out of bounds.
    * @throws IllegalArgumentException if the passed types -T- or -J- are not compatible with the
    *     searchRow functionality
+   * @throws IndexOutOfBoundsException if the searchIndex is out of bounds.
    */
   T searchRow(T rowToCheck, J searchObject, int searchIndex)
-      throws FactoryFailureException, IllegalArgumentException;
+      throws FactoryFailureException, IllegalArgumentException, IndexOutOfBoundsException;
 
   /**
    * This method is called when a row of type -T- is searched. This version of the search method
@@ -47,7 +48,7 @@ public interface RowOperator<T, J> {
    *     parsed.
    * @param searchObject A generic of type -J-, must be handled differently by each implementation
    *     of search.
-   * @return @rowToCheck if the row matches/contains the searchObject and null if it doesn't.
+   * @return rowToCheck if the row matches/contains the searchObject and null if it doesn't.
    * @throws IllegalArgumentException if the passed types -T- or -J- are not compatible with the
    *     searchRow functionality
    */

@@ -28,27 +28,19 @@ public class StringRow implements RowOperator<List<String>, String> {
    * @param searchIndex the index of the column to search through, as passed by the caller of the
    *     Search method and matched to a certain header.
    * @return rowToCheck if the row matches/contains the searchObject and null if it doesn't.
-   * @throws FactoryFailureException Implement this method by throwing FactoryFailureException if
-   *     the arbitrary type -T- is not compatible with searching by index (e.g. only one object per
-   *     row).
    * @throws IllegalArgumentException if the passed types -T- or -J- are not compatible with the
    *     searchRow functionality
+   * @throws IndexOutOfBoundsException if the searchIndex is out of bounds.
    */
   @Override
   public List<String> searchRow(List<String> rowToCheck, String searchObject, int searchIndex)
-      throws FactoryFailureException, IllegalArgumentException {
-    try {
+      throws IllegalArgumentException, IndexOutOfBoundsException {
       if (rowToCheck.get(searchIndex).equals(searchObject)) {
         return rowToCheck;
       } else {
         return null;
       }
-    } catch (IndexOutOfBoundsException e) {
-      throw new FactoryFailureException(
-          "Error: SearchObject type not compatible "
-              + "with searching by column or request index not available in this row: "
-              + rowToCheck);
-    }
+
   }
 
   /**
