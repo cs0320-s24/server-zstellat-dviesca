@@ -12,7 +12,7 @@ public class ViewHandler implements Route {
     private static Logger LOGGER;
     private ParsedDataPacket<List<String>, String> dataPacket;
 
-    public ViewHandler(Logger logger) {
+    public ViewHandler(Logger logger, LoadHandler loadHandler) {
         LOGGER = logger;
     }
 

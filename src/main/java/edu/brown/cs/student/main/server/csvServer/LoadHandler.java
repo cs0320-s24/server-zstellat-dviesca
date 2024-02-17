@@ -24,8 +24,8 @@ public class LoadHandler implements Route {
 
     private boolean isLoaded;
 
+    //TODO: Don't think we need these
     private String relativePath;
-
     private String absolutePath;
 
 
@@ -37,7 +37,20 @@ public class LoadHandler implements Route {
         LOGGER = logger;
         this.isLoaded = false;
     }
-"/Users/domingojr/IdeaProjects/server-zstellat-dviesca/data/RI City & Town Income from American Community Survey 5-Year Estimates Source_ US Census Bureau, 2017-2021 American Community Survey 5-Year Estimates 2017-2021 - Sheet1.csv"
+
+    /**
+     * Getter method for the boolean is loaded. Used to check if a file is loaded yet.
+     * @return true if the file has been successfully loaded, and false otherwise;
+     */
+    public boolean getIsLoaded() { return this.isLoaded; }
+
+    /**
+     * Getter method for the data packet parsed by
+     * @return the data packet object contained in the loader class
+     */
+    public ParsedDataPacket<List<String>, String> getDataPacket() { return this.dataPacket; }
+
+
     //TODO
     /**
      * @param request the request passed by the frontend user
@@ -48,9 +61,21 @@ public class LoadHandler implements Route {
     @Override
     public Object handle(Request request, Response response) throws Exception {
         String route = request.queryParams("route");
-        String hasHeaderString = request.queryParams("hasHeader"); //TODO do we expect a number(1/0) or string?
-        //TODO assumes it is "true" or "false", PENDING: error checking
-        Boolean hasHeader = Boolean.parseBoolean(hasHeaderString);
+        String hasHeaderString = request.queryParams("hasHeader");
+
+        // This checks the header string
+        boolean hasHeader = false;
+        if (hasHeaderString.equalsIgnoreCase("true")) {
+            hasHeader = true;
+        } else if (!hasHeaderString.equalsIgnoreCase("false")) { // If not false and it already didn't say true, then do error.
+            // If the string isn't "true" or "false", return an error
+            //TODO: error message -->
+            // ["Error: hasHeader argument (" + hasHeaderString + ") is invalid. Accepted values are: \"false\" or \"true.\""]
+            System.out.println("ERROR BRUDDDA");
+        }
+
+
+
 
         try {
             this.loadCSV(route, hasHeader);
@@ -68,7 +93,7 @@ public class LoadHandler implements Route {
         try {
             Reader csvReader = new FileReader(csvFilePath);
             this.dataPacket = new Parser<List<String>,String>().parse(new StringRow(), csvReader, containsHeaders);
-            this.isLoaded = true;
+            this.isLoaded = true; // Set to true if it gets here without throwing an exception
         }
         // TODO: LOG THESE ERRORS
         catch (FileNotFoundException e) {

@@ -12,7 +12,7 @@ public class SearchHandler implements Route {
     private static Logger LOGGER;
     private ParsedDataPacket<List<String>, String> dataPacket;
 
-    public SearchHandler(Logger logger) {
+    public SearchHandler(Logger logger, LoadHandler loadHandler) {
         LOGGER = logger;
     }
 
