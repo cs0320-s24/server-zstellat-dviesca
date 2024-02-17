@@ -21,12 +21,12 @@ import java.util.Set;
 public class LoadHandler implements Route {
     private static Logger LOGGER;
     private ParsedDataPacket<List<String>, String> dataPacket;
-
     private boolean isLoaded;
 
-    //TODO: Don't think we need these
+    // TODO: this isn't really helpful because the only time we need it is when we are calling it
+    //  in the Failure Response class, but that isn't part of the LoadHandlerClass and so it isnt
+    //  accessible.
     private String relativePath;
-    private String absolutePath;
 
 
     /**
@@ -36,6 +36,7 @@ public class LoadHandler implements Route {
     public LoadHandler(Logger logger) {
         LOGGER = logger;
         this.isLoaded = false;
+        this.relativePath = "No File Path Specified";
     }
 
     /**
@@ -71,7 +72,7 @@ public class LoadHandler implements Route {
             // If the string isn't "true" or "false", return an error
             //TODO: error message -->
             // ["Error: hasHeader argument (" + hasHeaderString + ") is invalid. Accepted values are: \"false\" or \"true.\""]
-            System.out.println("ERROR BRUDDDA");
+            System.out.println("ERROR BRUDDDAh");
         }
 
 
@@ -80,15 +81,17 @@ public class LoadHandler implements Route {
         try {
             this.loadCSV(route, hasHeader);
         } catch (RuntimeException e ) {
-            return new LoadFailureResponse(e).serialize();
+            // TODO: Figure out how to send errors
+            //return new LoadFailureResponse(e).serialize();
         }
 
 
     }
     private void loadCSV(String relativeFilePath, boolean containsHeaders) throws RuntimeException {
+        this.relativePath = relativeFilePath;
         //to protect data on the computer the reader will look only within defined csvFilePath package
         String dataRootPath  = "/Users/zach.stellato/Documents/Code/cs0320/server-zstellat-dviesca/data/";
-        String csvFilePath = dataRootPath + relativeFilePath;
+        String csvFilePath = dataRootPath + this.relativePath;
 
         try {
             Reader csvReader = new FileReader(csvFilePath);
@@ -114,16 +117,13 @@ public class LoadHandler implements Route {
 
     public record CSVNotFoundFailureResponse(String responseType) {
         public CSVNotFoundFailureResponse() {
-            this("CSV file (" + this.relativePath + );
+            // TODO: Figure out how to pass [this.relativePath] into here
+            this("CSV file (" + this.relativePath + ")");
         }
 
         String Serialize() {
-
+            return null;
         }
     }
-
-
-
-
 
 }
