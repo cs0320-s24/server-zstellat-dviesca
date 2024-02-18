@@ -1,9 +1,12 @@
 package edu.brown.cs.student.main.server.csvServer;
 
+import com.squareup.moshi.Moshi;
 import org.slf4j.Logger;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+
+import java.util.Map;
 
 public class SearchHandler implements Route {
   private static Logger LOGGER;
@@ -30,6 +33,21 @@ public class SearchHandler implements Route {
       throw new RuntimeException(
           "Error encountered while searching CSV file: "
               + "CSV file not loaded. Must call 'loadcsv' prior to calling 'searchcsv'");
+    }
+  }
+
+
+
+
+
+  public record CSVFailureResponse(String responseType, Map<String, Object> responseMap) {
+    public CSVFailureResponse(Map<String, Object> responseMap) {
+      this("error", responseMap);
+    }
+
+    String serialize() {
+      Moshi moshi = new Moshi.Builder().build();
+      return moshi.adapter(LoadHandler.CSVFailureResponse.class).toJson(this);
     }
   }
 }
