@@ -1,5 +1,6 @@
 package edu.brown.cs.student.main.csv.csvoperations;
 
+import edu.brown.cs.student.main.csv.csvoperations.exceptions.ColumnNotFoundException;
 import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +35,12 @@ public class Searcher<T, J> {
    *     only the first matching column header found is used.
    * @return an ArrayList of generic type -T- containing the rows that match the search parameters.
    *     If no matches are found, returns an empty ArrayList of type -T-
+   * @throws FactoryFailureException when searching by row fails. Specified in the RowOperator.
+   * @throws ColumnNotFoundException when the column they are searching for is not found in the
+   * headers for a csv object.
    */
   public List<T> search(ParsedDataPacket<T, J> dataPacket, J searchObject, String columnIdentifier)
-      throws FactoryFailureException {
+      throws FactoryFailureException, ColumnNotFoundException {
     this.dataPacket = dataPacket;
     this.searchObject = searchObject;
     this.columnIdentifier = columnIdentifier;
@@ -52,10 +56,7 @@ public class Searcher<T, J> {
       if (this.dataPacket.headers().contains(this.columnIdentifier)) {
         return this.SearchHelper(true); // true b/c valid searchColumn exists
       } else {
-        // TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        //  Maybe we should return an error rather than just searching all the columns if the input
-        //  was bad.
-        //  +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        throw new 
         System.err.println("Search by column failed. Searching all columns...");
         return this.SearchHelper(false); // false b/c NO valid searchColumn exists
       }
