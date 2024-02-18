@@ -6,7 +6,6 @@ import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
 import edu.brown.cs.student.main.csv.csvoperations.Parser;
 import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
-
 import java.io.*;
 import java.util.HashMap;
 import java.util.List;
@@ -57,6 +56,8 @@ public class LoadHandler implements Route {
 
   // TODO
   /**
+   * Method takes in requests from the server and calls
+   *
    * @param request the request passed by the frontend user
    * @param response a json containing data about the response.
    * @return
@@ -64,8 +65,9 @@ public class LoadHandler implements Route {
    */
   @Override
   public Object handle(Request request, Response response) {
-    String route = request.queryParams("route");
+    String route = request.queryParams("filepath");
     String hasHeaderString = request.queryParams("hasHeader");
+    String optional = request.queryParams("optional");
 
     return this.loadCSV(route, hasHeaderString);
   }
@@ -77,7 +79,8 @@ public class LoadHandler implements Route {
     String csvFilePath = dataRootPath + this.relativePath;
     Map<String, Object> responseMap = new HashMap<>();
 
-    //to further prevent from traversal attacks sample opens the file to analyze its path without directly opening it.
+    // to further prevent from traversal attacks sample opens the file to analyze its path without
+    // directly opening it.
     File file = new File(csvFilePath);
     String canonicalPath = "";
     try {
@@ -89,14 +92,12 @@ public class LoadHandler implements Route {
       return new CSVFailureResponse(responseMap).serialize();
     }
     String absPath = "/Users/domingojr/IdeaProjects/server-zstellat-dviesca/data";
-    //if path if the given absolute path is not contained some traversal has taken place
-    if(!canonicalPath.contains(absPath)){
+    // if path if the given absolute path is not contained some traversal has taken place
+    if (!canonicalPath.contains(absPath)) {
       responseMap.put("Error", "Malicious traversal of directory error");
       responseMap.put("Route", this.relativePath);
       return new CSVFailureResponse(responseMap).serialize();
     }
-
-
 
     // This checks the header string
     boolean hasHeader = false;
@@ -116,6 +117,8 @@ public class LoadHandler implements Route {
       this.dataPacket =
           new Parser<List<String>, String>().parse(new StringRow(), csvReader, hasHeader);
       this.isLoaded = true; // Set to true if it gets here without throwing an exception
+      responseMap.put("Success", "CSV File was parsed correctly");
+      responseMap.put("File Path", this.relativePath);
       return new CSVLoadedSuccessResponse(responseMap).serialize();
     }
     // TODO: LOG THESE ERRORS

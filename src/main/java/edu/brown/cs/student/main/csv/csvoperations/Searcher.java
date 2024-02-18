@@ -56,15 +56,18 @@ public class Searcher<T, J> {
         return this.SearchHelper(true); // true b/c valid searchColumn exists
       } else {
         Map<String, Object> responseMap = new HashMap<>();
-        responseMap.put("Error", "Search by column failed. Column identifier was not a valid column index or did " +
-                "not match any column headers in CSV");
+        responseMap.put(
+            "Error",
+            "Search by column failed. Column identifier was not a valid column index or did "
+                + "not match any column headers in CSV");
         responseMap.put("columnIdentifier", this.columnIdentifier);
         if (dataPacket.containsHeader()) {
           responseMap.put("Headers", this.dataPacket.headers());
         }
+        System.out.println("Search by column failed. Searching all columns...");
         throw new FactoryFailureException(responseMap);
-//        System.err.println("Search by column failed. Searching all columns...");
-//        return this.SearchHelper(false); // false b/c NO valid searchColumn exists
+
+        //        return this.SearchHelper(false); // false b/c NO valid searchColumn exists
       }
     }
   }
@@ -130,21 +133,29 @@ public class Searcher<T, J> {
         }
       }
     } catch (FactoryFailureException e) {
+      System.out.println("generic type t");
       throw new FactoryFailureException("Generic type <T> does not support search by column");
     } catch (IllegalArgumentException e) {
+      System.out.println("illegal argument");
       Map<String, Object> responseMap = new HashMap<>();
-      responseMap.put("Error", "Type arguments for <T> and <J> are not compatible with the searchRow functionality " +
-              "implemented by the RowOperator class");
+      responseMap.put(
+          "Error",
+          "Type arguments for <T> and <J> are not compatible with the searchRow functionality "
+              + "implemented by the RowOperator class");
       responseMap.put("Row being searched", currentRow);
       throw new FactoryFailureException(responseMap);
     } catch (IndexOutOfBoundsException e) {
+      System.out.println("out of bounds");
       Map<String, Object> responseMap = new HashMap<>();
-      responseMap.put("Error", "SearchObject type not compatible with searching by column or request index in the " +
-              "current row.");
+      responseMap.put(
+          "Error",
+          "SearchObject type not compatible with searching by column or request index in the "
+              + "current row.");
       responseMap.put("Column Index", columnIndex);
       responseMap.put("Row being searched", currentRow);
       throw new FactoryFailureException(responseMap);
     }
+    System.out.println("all good returning stuff");
     return matchingRows;
   }
 }

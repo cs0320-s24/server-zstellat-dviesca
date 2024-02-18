@@ -64,8 +64,7 @@ public class StringRow implements RowOperator<List<String>, String> {
         return null;
       }
     } catch (ClassCastException e) {
-      throw new IllegalArgumentException(
-          "Type does not allow for .contains() method to function");
+      throw new IllegalArgumentException("Type does not allow for .contains() method to function");
     }
   }
 }

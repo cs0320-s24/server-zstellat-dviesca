@@ -2,7 +2,7 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
-import edu.brown.cs.student.main.server.censusServer.CensusHandler;
+import edu.brown.cs.student.main.server.censusServer.BroadBandHandler;
 import edu.brown.cs.student.main.server.csvServer.LoadHandler;
 import edu.brown.cs.student.main.server.csvServer.SearchHandler;
 import edu.brown.cs.student.main.server.csvServer.ViewHandler;
@@ -57,12 +57,9 @@ public class Server {
 
     // setup the handlers for the GET of TODO might have to chane the name
     Spark.get("loadcsv", loadHandler); // TODO for the csvoperations case
-    Spark.get("viewcsv", new ViewHandler(LOGGER, loadHandler)); // TODO for the csvoperations case
-    Spark.get(
-        "searchcsv", new SearchHandler(LOGGER, loadHandler)); // TODO for the csvoperations case
-    // TODO question: is this all within the same "level" as the csv "streets" or is it in a
-    // different "category/route"
-    Spark.get("censusOperations", new CensusHandler()); // TODO for the censusoperations case
+    Spark.get("viewcsv", new ViewHandler(LOGGER, loadHandler));
+    Spark.get("searchcsv", new SearchHandler(LOGGER, loadHandler));
+    Spark.get("broadband", new BroadBandHandler()); // TODO for the censusoperations case
 
     Spark.init();
     Spark.awaitInitialization();

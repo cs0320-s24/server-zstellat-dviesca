@@ -64,9 +64,9 @@ public class Parser<T, J> {
       List<String> row = Arrays.asList(regexSplitCSVRow.split(line));
 
       // Loops through each row and gets rid of unnecessary quotations if they exist
-      for(int i = 0; i < row.size(); i++) {
+      for (int i = 0; i < row.size(); i++) {
         String ogString = row.get(i);
-        if (ogString.length()>1 && ogString.startsWith("\"") && ogString.endsWith("\"")) {
+        if (ogString.length() > 1 && ogString.startsWith("\"") && ogString.endsWith("\"")) {
           String newString = ogString.substring(1, ogString.length() - 1);
           row.set(i, newString);
         }

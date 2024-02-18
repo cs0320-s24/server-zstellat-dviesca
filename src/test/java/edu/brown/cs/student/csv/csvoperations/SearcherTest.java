@@ -11,7 +11,10 @@ import edu.brown.cs.student.main.csv.csvoperations.rowoperations.RowOperator;
 import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -68,7 +71,7 @@ public class SearcherTest {
     ParsedDataPacket<List<String>, String> packet =
         parser.parse(new StringRow(), new StringReader(""), true);
 
-    List<List<String>> result = searcher.search(packet, "New York", "Location");
+    List<List<String>> result = searcher.search(packet, "New York");
 
     assertEquals("[]", result.toString());
   }
@@ -82,19 +85,26 @@ public class SearcherTest {
     Parser<List<String>, String> parser = new Parser<>();
     ParsedDataPacket<List<String>, String> packet =
         parser.parse(new StringRow(), new StringReader(csvContent), true);
-    Exception exception =
+    FactoryFailureException exception =
         assertThrows(
             FactoryFailureException.class,
             () -> {
               searcher.search(packet, "San Francisco", "Location");
             });
 
-    String expectedMessage =
-        ("Error: SearchObject type not compatible with searching by column "
-            + "or request index: [2] not available in this row: [Jane, 30]");
-    String actualMessage = exception.getMessage();
+    Map<String, Object> expectedResponseMap = new HashMap<>();
+    expectedResponseMap.put(
+        "Error",
+        "SearchObject type not compatible with searching by column or request index in the current row.");
+    expectedResponseMap.put("Column Index", 2);
+    List<String> expectedCurrentRow = new ArrayList<>();
+    expectedCurrentRow.add("Jane");
+    expectedCurrentRow.add("30");
+    expectedResponseMap.put("Row being searched", expectedCurrentRow);
 
-    assertEquals(expectedMessage, actualMessage);
+    Map<String, Object> actualResponseMap = exception.getResponseMap();
+
+    assertEquals(expectedResponseMap, actualResponseMap);
   }
 
   // Sample RowOperator for testing purposes
@@ -133,14 +143,14 @@ public class SearcherTest {
         parser.parse(
             new SampleRowOperatorNoColumn(), new StringReader(this.csvContentHeader), true);
 
-    Exception exception =
+    FactoryFailureException exception =
         assertThrows(
             FactoryFailureException.class,
             () -> {
               searcher.search(result, "Twenty", "Age");
             });
 
-    String expectedMessage = ("Error: Generic type <T> does not support search by column");
+    String expectedMessage = ("Generic type <T> does not support search by column");
     String actualMessage = exception.getMessage();
 
     assertEquals(expectedMessage, actualMessage);

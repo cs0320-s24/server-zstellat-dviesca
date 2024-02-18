@@ -5,6 +5,9 @@ import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import edu.brown.cs.student.main.csv.csvoperations.Searcher;
+import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import org.slf4j.Logger;
 import spark.Request;
 import spark.Response;
@@ -14,18 +17,38 @@ public class SearchHandler implements Route {
   private static Logger LOGGER;
   private LoadHandler loadHandler;
 
+  /**
+   * Constructor for SearchHandler.
+   * Initializes a new SearchHandler instance with specified Logger and LoadHandler.
+   * ChatGPT was utilized to help create simple javadocs.
+   *
+   * @param logger        The logger used for logging information and errors.
+   * @param loadHandler   The LoadHandler instance used for handling CSV file loading operations.
+   */
   public SearchHandler(Logger logger, LoadHandler loadHandler) {
     LOGGER = logger;
     this.loadHandler = loadHandler;
   }
 
+  /**
+   * Method when the searchCSV route is called by the server, it checks the query parameters and then calls
+   * a helper method to perform the searching.
+   * @param request
+   * @param response
+   * @return
+   * @throws Exception
+   */
   // TODO
   @Override
   public Object handle(Request request, Response response) throws Exception {
-    return this.searchCSV();
+    String searchTerm = request.queryParams("searchTerm");
+    String columnIdentifier = request.queryParams("columnIdentifier");
+
+    return this.searchCSV(searchTerm, columnIdentifier);
   }
 
-  public Object searchCSV() {
+
+  public Object searchCSV(String searchTerm, String columnIdentifier) {
     Map<String, Object> responseMap = new HashMap<>();
 
     // This ensures that a csvFile has already been loaded
@@ -36,11 +59,28 @@ public class SearchHandler implements Route {
     }
 
     ParsedDataPacket<List<String>, String> dataPacket = this.loadHandler.getDataPacket();
-    if (dataPacket.containsHeader()) {
-      responseMap.put("Headers", dataPacket.headers());
+    Searcher<List<String>, String> searcher = new Searcher<>();
+    List<List<String>> result;
+    try {
+      // Calls search differently if a columnIdentifier was passed or not
+      if (columnIdentifier == null || columnIdentifier.isEmpty()) {
+        result = searcher.search(dataPacket, searchTerm);
+      } else {
+        result = searcher.search(dataPacket, searchTerm, columnIdentifier);
+      }
+
+      // Adds results to responseMap
+      responseMap.put("success", "CSV was searched");
+      if (dataPacket.containsHeader()) {
+        responseMap.put("Column headers", dataPacket.headers());
+      }
+      responseMap.put("Query results", result);
+      return new CSVSearchSuccessResponse(responseMap).serialize();
+
+    } catch (FactoryFailureException e) {
+      responseMap = e.getResponseMap();
+      return new CSVSearchFailureResponse(responseMap);
     }
-    responseMap.put("Data", dataPacket.parsedRows());
-    return new CSVSearchSuccessResponse(responseMap).serialize();
   }
 
   public record CSVSearchSuccessResponse(String responseType, Map<String, Object> responseMap) {
@@ -54,6 +94,10 @@ public class SearchHandler implements Route {
     }
   }
 
+  /**
+   * Represents a failure response for a CSV search operation.
+   * This record holds the response type and a map of the response data, typically containing error information.
+   */
   public record CSVSearchFailureResponse(String responseType, Map<String, Object> responseMap) {
     public CSVSearchFailureResponse(Map<String, Object> responseMap) {
       this("error", responseMap);

@@ -47,9 +47,9 @@ class ParserTest {
 
     List<String> expectedData = new ArrayList<>();
     expectedData.add("Exeter");
-    expectedData.add("\"95,053.00\"");
-    expectedData.add("\"116,894.00\"");
-    expectedData.add("\"41,058.00\"");
+    expectedData.add("95,053.00");
+    expectedData.add("116,894.00");
+    expectedData.add("41,058.00");
     List<List<String>> expectedOutput = new ArrayList<>();
     expectedOutput.add(expectedData);
 
