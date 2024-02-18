@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main.server.csvServer;
 
+import com.squareup.moshi.JsonAdapter;
+import com.squareup.moshi.Moshi;
 import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
 import edu.brown.cs.student.main.csv.csvoperations.Parser;
 import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
@@ -75,19 +77,17 @@ public class LoadHandler implements Route {
             System.out.println("ERROR BRUDDDAh");
         }
 
-
-
-
-        try {
-            this.loadCSV(route, hasHeader);
-        } catch (RuntimeException e ) {
-            // TODO: Figure out how to send errors
-            //return new LoadFailureResponse(e).serialize();
-        }
-
-      return null;
+//        try {
+//            this.loadCSV(route, hasHeader);
+//        } catch (RuntimeException e ) {
+//            // TODO: Figure out how to send errors
+//            //return new LoadFailureResponse(e).serialize();
+//        }
+//
+//      return null;
+        return this.loadCSV(route, hasHeader);
     }
-    private void loadCSV(String relativeFilePath, boolean containsHeaders) throws RuntimeException {
+    private Object loadCSV(String relativeFilePath, boolean containsHeaders) throws RuntimeException {
         this.relativePath = relativeFilePath;
         //to protect data on the computer the reader will look only within defined csvFilePath package
         String dataRootPath  = "/Users/zach.stellato/Documents/Code/cs0320/server-zstellat-dviesca/data/";
@@ -112,18 +112,39 @@ public class LoadHandler implements Route {
         System.out.println("Just tried to load csv File path: (" + csvFilePath + ")");
         // TODO: +++++++ FOR TESTING +++++++++
 
+        if(this.isLoaded = true){
+            return new CSVFoundLoadedSuccessResponse()
+        }
+        else {
+            return new CSVNotFoundFailureResponse()
+        }
 
     }
 
-//    public record CSVNotFoundFailureResponse(String responseType) {
-//        public CSVNotFoundFailureResponse() {
-//            // TODO: Figure out how to pass [this.relativePath] into here
-//            this("CSV file (" + this.relativePath + ")");
-//        }
-//
-//        String Serialize() {
-//            return null;
-//        }
-//    }
+    public record CSVFoundLoadedSuccessResponse(String response_type, Map<String, Object> responseMap){
+        public CSVFoundLoadedSuccessResponse(Map<String, Object> responseMap) {
+            this("success", responseMap);
+        }
+        String serialize(){
+            try{
+                Moshi moshi = new Moshi.Builder().build();
+                JsonAdapter<CSVFoundLoadedSuccessResponse> adapter = moshi.adapter(CSVFoundLoadedSuccessResponse.class);
+                return adapter.toJson(this);
+            } catch(Exception e){
+                e.printStackTrace();
+                throw e; //TODO do error handling correctly
+            }
+        }
+    }
 
+    public record CSVNotFoundFailureResponse(String responseType) {
+        public CSVNotFoundFailureResponse() {
+            // TODO: Figure out how to pass [this.relativePath] into here
+            this("error");
+        }
+        String serialize(){
+            Moshi moshi = new Moshi.Builder().build();
+            return moshi.adapter(CSVNotFoundFailureResponse.class).toJson(this);
+        }
+    }
 }
