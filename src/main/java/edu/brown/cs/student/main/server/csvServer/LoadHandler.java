@@ -6,10 +6,8 @@ import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
 import edu.brown.cs.student.main.csv.csvoperations.Parser;
 import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+
+import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +76,27 @@ public class LoadHandler implements Route {
     String dataRootPath = "data/";
     String csvFilePath = dataRootPath + this.relativePath;
     Map<String, Object> responseMap = new HashMap<>();
+
+    //to further prevent from traversal attacks sample opens the file to analyze its path without directly opening it.
+    File file = new File(csvFilePath);
+    String canonicalPath = "";
+    try {
+      canonicalPath = file.getCanonicalPath();
+    } catch (IOException e) {
+      // Handle IOException if nonexistent file
+      responseMap.put("Error", "Error opening up desired file IO");
+      responseMap.put("Route", this.relativePath);
+      return new CSVFailureResponse(responseMap).serialize();
+    }
+    String absPath = "/Users/domingojr/IdeaProjects/server-zstellat-dviesca/data";
+    //if path if the given absolute path is not contained some traversal has taken place
+    if(!canonicalPath.contains(absPath)){
+      responseMap.put("Error", "Malicious traversal of directory error");
+      responseMap.put("Route", this.relativePath);
+      return new CSVFailureResponse(responseMap).serialize();
+    }
+
+
 
     // This checks the header string
     boolean hasHeader = false;

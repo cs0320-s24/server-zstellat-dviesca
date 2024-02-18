@@ -1,9 +1,10 @@
 package edu.brown.cs.student.main.csv.csvoperations;
 
-import edu.brown.cs.student.main.csv.csvoperations.exceptions.ColumnNotFoundException;
 import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * I build the class with two constructors that each call the same helper method. I did this so the
@@ -36,11 +37,9 @@ public class Searcher<T, J> {
    * @return an ArrayList of generic type -T- containing the rows that match the search parameters.
    *     If no matches are found, returns an empty ArrayList of type -T-
    * @throws FactoryFailureException when searching by row fails. Specified in the RowOperator.
-   * @throws ColumnNotFoundException when the column they are searching for is not found in the
-   * headers for a csv object.
    */
   public List<T> search(ParsedDataPacket<T, J> dataPacket, J searchObject, String columnIdentifier)
-      throws FactoryFailureException, ColumnNotFoundException {
+      throws FactoryFailureException {
     this.dataPacket = dataPacket;
     this.searchObject = searchObject;
     this.columnIdentifier = columnIdentifier;
@@ -56,9 +55,16 @@ public class Searcher<T, J> {
       if (this.dataPacket.headers().contains(this.columnIdentifier)) {
         return this.SearchHelper(true); // true b/c valid searchColumn exists
       } else {
-        throw new 
-        System.err.println("Search by column failed. Searching all columns...");
-        return this.SearchHelper(false); // false b/c NO valid searchColumn exists
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("Error", "Search by column failed. Column identifier was not a valid column index or did " +
+                "not match any column headers in CSV");
+        responseMap.put("columnIdentifier", this.columnIdentifier);
+        if (dataPacket.containsHeader()) {
+          responseMap.put("Headers", this.dataPacket.headers());
+        }
+        throw new FactoryFailureException(responseMap);
+//        System.err.println("Search by column failed. Searching all columns...");
+//        return this.SearchHelper(false); // false b/c NO valid searchColumn exists
       }
     }
   }
@@ -124,18 +130,20 @@ public class Searcher<T, J> {
         }
       }
     } catch (FactoryFailureException e) {
-      throw new FactoryFailureException(
-          "Error: Generic type <T> does not support search by column");
+      throw new FactoryFailureException("Generic type <T> does not support search by column");
     } catch (IllegalArgumentException e) {
-      throw new FactoryFailureException(
-          "Error: Type arguments for <T> and <J> are not compatible with the searchRow "
-              + "functionality implemented by the RowOperator class");
+      Map<String, Object> responseMap = new HashMap<>();
+      responseMap.put("Error", "Type arguments for <T> and <J> are not compatible with the searchRow functionality " +
+              "implemented by the RowOperator class");
+      responseMap.put("Row being searched", currentRow);
+      throw new FactoryFailureException(responseMap);
     } catch (IndexOutOfBoundsException e) {
-      throw new FactoryFailureException(
-          "Error: SearchObject type not compatible with searching by column or request index: ["
-              + columnIndex
-              + "] not available in this row: "
-              + currentRow);
+      Map<String, Object> responseMap = new HashMap<>();
+      responseMap.put("Error", "SearchObject type not compatible with searching by column or request index in the " +
+              "current row.");
+      responseMap.put("Column Index", columnIndex);
+      responseMap.put("Row being searched", currentRow);
+      throw new FactoryFailureException(responseMap);
     }
     return matchingRows;
   }
