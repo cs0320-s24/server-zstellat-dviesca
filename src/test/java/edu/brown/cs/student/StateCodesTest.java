@@ -38,8 +38,10 @@ public class StateCodesTest {
   //  --see ==> asserts in this test class (line 60-62)
   @Test
   public void stateCodeHashCheck() throws IOException, FactoryFailureException {
-    FileReader stateFile = new FileReader("/Users/zach.stellato/Documents/Code/"
-        + "cs0320/server-zstellat-dviesca/data/stateCodes.csv");
+//    FileReader stateFile = new FileReader("/Users/zach.stellato/Documents/Code/"
+//        + "cs0320/server-zstellat-dviesca/data/stateCodes.csv");
+    FileReader stateFile = new FileReader("/Users/domingojr/IdeaProjects/server-zstellat-dviesca/data/stateCodes.csv");
+
     Parser<List<String>, String> parser = new Parser<>();
 
     ParsedDataPacket<List<String>, String> stateCodes =
@@ -57,9 +59,9 @@ public class StateCodesTest {
     }
 
     // These all include the quotes but they shouldn't
-    assertEquals("\"11\"", stateToNumberMap.get("\"District of Columbia\""));
-    assertEquals("\"12\"", stateToNumberMap.get("\"Florida\""));
-    assertEquals("\"Hawaii\"", numberToStateMap.get("\"15\""));
+    assertEquals("11", stateToNumberMap.get("District of Columbia"));
+    assertEquals("12", stateToNumberMap.get("Florida"));
+    assertEquals("Hawaii", numberToStateMap.get("15"));
   }
 
 

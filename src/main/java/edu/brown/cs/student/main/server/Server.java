@@ -41,7 +41,7 @@ public class Server {
 
     //TODO I THINK THIS IS ALL NOW IRRELEVANT WITH DEPENDENCY INJECTION AND THE NEW HANDLERS
 //    Reading the JSON
-//    ODO: modify from String menuAsJson = SoupAPIUtilities.readInJson("data/menu.json");
+//    ODO: modify from String menuAsJson = SoupAPIUtilities.readInJson("data/menu.json"); //TODO this will be the census
 //    to include where the census data is coming from
 //    String filepath = ; // ODO: find a way so local and api gotten data can be hosted
 //    String dataAsJson = CensusAPIUtilities.readInJson(filepath); // ODO: find how to manage the
