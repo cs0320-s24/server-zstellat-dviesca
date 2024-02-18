@@ -1,6 +1,5 @@
 package edu.brown.cs.student.main.csv.csvoperations.rowoperations;
 
-import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import java.util.List;
 
 public class StringRow implements RowOperator<List<String>, String> {
@@ -35,12 +34,11 @@ public class StringRow implements RowOperator<List<String>, String> {
   @Override
   public List<String> searchRow(List<String> rowToCheck, String searchObject, int searchIndex)
       throws IllegalArgumentException, IndexOutOfBoundsException {
-      if (rowToCheck.get(searchIndex).equals(searchObject)) {
-        return rowToCheck;
-      } else {
-        return null;
-      }
-
+    if (rowToCheck.get(searchIndex).equals(searchObject)) {
+      return rowToCheck;
+    } else {
+      return null;
+    }
   }
 
   /**

@@ -28,10 +28,10 @@ public class Searcher<T, J> {
    *
    * @param dataPacket a Record of multiple data types returned by the Parser class
    * @param searchObject is a generic Object type in order to accommodate multiple types of values
-   *                     that are searchable (e.g. by Star, by StringRow).
+   *     that are searchable (e.g. by Star, by StringRow).
    * @param columnIdentifier is a String argument passed by the user indicating a specific column to
-   *                         search through. Searches by index number if the String is parseable as
-   *                         an integer. NOTE: only the first matching column header found is used.
+   *     search through. Searches by index number if the String is parseable as an integer. NOTE:
+   *     only the first matching column header found is used.
    * @return an ArrayList of generic type -T- containing the rows that match the search parameters.
    *     If no matches are found, returns an empty ArrayList of type -T-
    */
@@ -79,7 +79,6 @@ public class Searcher<T, J> {
 
     // False because a parameter for the searchColumn wasn't passed
     return SearchHelper(false);
-
   }
 
   /**
@@ -88,10 +87,10 @@ public class Searcher<T, J> {
    * list which returns at the end.
    *
    * @param hasColumnArgument true if a valid column argument was passed into the search method, and
-   *                          false otherwise.
+   *     false otherwise.
    * @return the List of objects of RowOperator type that match the search parameters.
    * @throws FactoryFailureException if an error is encountered in the Row Operator implementation
-   * of searchRow.
+   *     of searchRow.
    */
   private List<T> SearchHelper(boolean hasColumnArgument) throws FactoryFailureException {
 
@@ -132,8 +131,10 @@ public class Searcher<T, J> {
               + "functionality implemented by the RowOperator class");
     } catch (IndexOutOfBoundsException e) {
       throw new FactoryFailureException(
-          "Error: SearchObject type not compatible with searching by column or request index: [" +
-              columnIndex + "] not available in this row: " + currentRow);
+          "Error: SearchObject type not compatible with searching by column or request index: ["
+              + columnIndex
+              + "] not available in this row: "
+              + currentRow);
     }
     return matchingRows;
   }

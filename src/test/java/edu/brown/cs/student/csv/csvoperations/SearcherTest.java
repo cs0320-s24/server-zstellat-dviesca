@@ -42,7 +42,6 @@ public class SearcherTest {
     assertEquals("[]", resultNotFound.toString());
   }
 
-
   // Tests if it searches the data correctly by column index (test might be wrong)
   @Test
   void testParseByIndex() throws FactoryFailureException, IOException {
@@ -59,8 +58,6 @@ public class SearcherTest {
     assertEquals("[[John, 25, New York]]", resultFound.toString());
     assertEquals("[]", resultNotFound.toString());
   }
-
-
 
   // if CSV is empty
   @Test
@@ -92,8 +89,9 @@ public class SearcherTest {
               searcher.search(packet, "San Francisco", "Location");
             });
 
-    String expectedMessage = ("Error: SearchObject type not compatible with searching by column "
-        + "or request index: [2] not available in this row: [Jane, 30]");
+    String expectedMessage =
+        ("Error: SearchObject type not compatible with searching by column "
+            + "or request index: [2] not available in this row: [Jane, 30]");
     String actualMessage = exception.getMessage();
 
     assertEquals(expectedMessage, actualMessage);

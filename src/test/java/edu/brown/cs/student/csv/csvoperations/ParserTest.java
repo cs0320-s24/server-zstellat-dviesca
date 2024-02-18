@@ -41,10 +41,7 @@ class ParserTest {
     Parser<List<String>, String> parser = new Parser<>();
     Searcher<List<String>, String> searcher = new Searcher<>();
 
-    FileReader riCSVData =
-        new FileReader(
-            "/Users/zach.stellato/Documents/Code/cs0320/"
-                + "server-zstellat-dviesca/data/RI_Town_Income.csv");
+    FileReader riCSVData = new FileReader("data/RI_Town_Income.csv");
 
     ParsedDataPacket<List<String>, String> packet = parser.parse(new StringRow(), riCSVData, true);
 

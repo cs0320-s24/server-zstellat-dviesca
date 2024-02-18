@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * Record that contains a bunch of info outputted after a csv is parsed
+ *
  * @param rowType an object of type RowOperator
  * @param parsedRows a List of type -T- that contains all the rows of the CSV file (excluding
  *     headers)
