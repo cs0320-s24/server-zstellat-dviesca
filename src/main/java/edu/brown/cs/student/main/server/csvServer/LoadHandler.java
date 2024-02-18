@@ -65,21 +65,10 @@ public class LoadHandler implements Route {
    * @throws Exception
    */
   @Override
-  public Object handle(Request request, Response response) throws Exception {
+  public Object handle(Request request, Response response) {
     String route = request.queryParams("route");
     String hasHeaderString = request.queryParams("hasHeader");
 
-
-
-
-    //        try {
-    //            this.loadCSV(route, hasHeader);
-    //        } catch (RuntimeException e ) {
-    //            // TODO: Figure out how to send errors
-    //            //return new LoadFailureResponse(e).serialize();
-    //        }
-    //
-    //      return null;
     return this.loadCSV(route, hasHeaderString);
   }
 
@@ -90,7 +79,6 @@ public class LoadHandler implements Route {
     String csvFilePath = dataRootPath + this.relativePath;
     Map<String, Object> responseMap = new HashMap<>();
 
-
     // This checks the header string
     boolean hasHeader = false;
     if (hasHeaderString.equalsIgnoreCase("true")) {
@@ -98,32 +86,32 @@ public class LoadHandler implements Route {
       // If not false and it already didn't say true, then do error.
     } else if (!hasHeaderString.equalsIgnoreCase("false")) {
       // If the string isn't "true" or "false", return an error
-      responseMap.put("Error", "Invalid hasHeader argument. Accepted values are 'false' and 'true'");
+      responseMap.put(
+          "Error", "Invalid hasHeader argument. Accepted values are 'false' and 'true'");
       responseMap.put("hasHeader argument", hasHeaderString);
-      return new CSVFailureResponse(responseMap);
+      return new CSVFailureResponse(responseMap).serialize();
     }
-
 
     try {
       Reader csvReader = new FileReader(csvFilePath);
       this.dataPacket =
           new Parser<List<String>, String>().parse(new StringRow(), csvReader, hasHeader);
       this.isLoaded = true; // Set to true if it gets here without throwing an exception
-      return new CSVLoadedSuccessResponse(responseMap);
+      return new CSVLoadedSuccessResponse(responseMap).serialize();
     }
     // TODO: LOG THESE ERRORS
     catch (FileNotFoundException e) {
       responseMap.put("Error", "CSV file not found");
       responseMap.put("Route", this.relativePath);
-      return new CSVFailureResponse(responseMap);
+      return new CSVFailureResponse(responseMap).serialize();
     } catch (IOException e) {
       responseMap.put("Error", "An IO error occurred while trying to read the CSV file by line");
       responseMap.put("Route", this.relativePath);
-      return new CSVFailureResponse(responseMap);
+      return new CSVFailureResponse(responseMap).serialize();
     } catch (FactoryFailureException e) {
       responseMap.put("Error", e.getMessage());
       responseMap.put("Route", this.relativePath);
-      return new CSVFailureResponse(responseMap);
+      return new CSVFailureResponse(responseMap).serialize();
     }
   }
 
@@ -132,16 +120,11 @@ public class LoadHandler implements Route {
       this("success", responseMap);
     }
 
+    // TODO conceptualize maybe change (catch json issues)
     String serialize() {
-      try {
-        Moshi moshi = new Moshi.Builder().build();
-        JsonAdapter<CSVLoadedSuccessResponse> adapter =
-            moshi.adapter(CSVLoadedSuccessResponse.class);
-        return adapter.toJson(this);
-      } catch (Exception e) {
-        e.printStackTrace();
-        throw e; // TODO do error handling correctly
-      }
+      Moshi moshi = new Moshi.Builder().build();
+      JsonAdapter<CSVLoadedSuccessResponse> adapter = moshi.adapter(CSVLoadedSuccessResponse.class);
+      return adapter.toJson(this);
     }
   }
 

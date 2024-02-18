@@ -1,5 +1,10 @@
 package edu.brown.cs.student.main.server.csvServer;
 
+import com.squareup.moshi.Moshi;
+import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import spark.Request;
 import spark.Response;
@@ -14,23 +19,48 @@ public class ViewHandler implements Route {
     this.loadHandler = loadHandler;
   }
 
-  // TODO
   @Override
   public Object handle(Request request, Response response) throws Exception {
-
-    return null;
+    return this.viewCSV();
   }
 
-  private void viewCSV() throws RuntimeException {
+  private Object viewCSV() throws RuntimeException {
+    Map<String, Object> responseMap = new HashMap<>();
+
     // This ensures that a csvFile has already been loaded
     if (!this.loadHandler.getIsLoaded()) {
-      // TODO: Figure out logging errors. This is copied from the missive -->
-      //  USER STORY 1: using `viewcsv` or `searchcsv` CSV queries without a CSV
-      //  loaded must produce an error API response, but not halt the server. (See the API
-      //  specification your server must follow below.)
-      throw new RuntimeException(
-          "Error encountered while viewing CSV file: "
-              + "CSV file not loaded. Must call 'loadcsv' prior to calling 'viewcsv'");
+      responseMap.put(
+          "Error", "CSV file not loaded. Must call 'loadcsv' prior to calling 'viewcsv'");
+      return new CSVViewFailureResponse(responseMap).serialize();
+    }
+
+    ParsedDataPacket<List<String>, String> dataPacket = this.loadHandler.getDataPacket();
+    if (dataPacket.containsHeader()) {
+      responseMap.put("Headers", dataPacket.headers());
+    }
+    responseMap.put("Data", dataPacket.parsedRows());
+    return new CSVViewSuccessResponse(responseMap).serialize();
+  }
+
+  public record CSVViewSuccessResponse(String responseType, Map<String, Object> responseMap) {
+    public CSVViewSuccessResponse(Map<String, Object> responseMap) {
+      this("success", responseMap);
+    }
+
+    String serialize() {
+      Moshi moshi = new Moshi.Builder().build();
+      return moshi.adapter(ViewHandler.CSVViewSuccessResponse.class).toJson(this);
+    }
+  }
+
+  public record CSVViewFailureResponse(String responseType, Map<String, Object> responseMap) {
+    public CSVViewFailureResponse(Map<String, Object> responseMap) {
+      this("error", responseMap);
+    }
+
+    String serialize() {
+      Moshi moshi = new Moshi.Builder().build();
+      return moshi.adapter(ViewHandler.CSVViewFailureResponse.class).toJson(this);
     }
   }
 }
