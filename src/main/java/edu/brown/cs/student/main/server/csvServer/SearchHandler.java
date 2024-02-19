@@ -47,9 +47,10 @@ public class SearchHandler implements Route {
 
   /**
    * Helper class called by the handle method to search the loaded csv.
+   *
    * @param searchTerm a String containing the user's inputted data 'searchTerm'
    * @param columnIdentifier An optional string containing the user's inputted data about
-   *                        'columnIdentifier'
+   *     'columnIdentifier'
    * @return a serialized Json containing response info about output, error or any valid matches.
    * @throws RuntimeException if an error occurs while trying to create a Json from the data.
    */
@@ -90,9 +91,10 @@ public class SearchHandler implements Route {
 
   /**
    * Class used to serialize a success response for a CSV search operation
+   *
    * @param responseType a String containing the response type, i.e. "success"
-   * @param responseMap a Map of String, Object pairs containing important info about the
-   *                    process and the results.
+   * @param responseMap a Map of String, Object pairs containing important info about the process
+   *     and the results.
    */
   public record CSVSearchSuccessResponse(String responseType, Map<String, Object> responseMap) {
     public CSVSearchSuccessResponse(Map<String, Object> responseMap) {
@@ -107,6 +109,7 @@ public class SearchHandler implements Route {
 
   /**
    * Class used to serialize a failure response for a CSV search operation.
+   *
    * @param responseType a String containing the response type, i.e. "error"
    * @param responseMap is a Map of String, Object pairs containing pertinent error information.
    */

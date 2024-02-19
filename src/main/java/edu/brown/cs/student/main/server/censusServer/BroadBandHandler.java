@@ -28,9 +28,9 @@ public class BroadBandHandler implements Route {
     return null;
   }
 
-  //
   //  private String sendBroadbandRequest(String state, String county){
   //    HttpRequest censusAPIRequest = HttpRequest.newBuilder().uri(new URI(
+  //
   //
   // "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&for=county:*&in=state:06")).GET().build();
   //
@@ -38,8 +38,8 @@ public class BroadBandHandler implements Route {
   //
   //  private String sendCountryRequest(String stateCode, String county){
   //    HttpRequest censusAPIRequest = HttpRequest.newBuilder().uri(new URI(
-  //            "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:" +
-  // stateCode)).GET().build();
+  //        "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:" +
+  //            stateCode)).GET().build();
   //
   //  }
   //
@@ -49,7 +49,7 @@ public class BroadBandHandler implements Route {
   //    Parser<List<String>, String> parser = new Parser<>();
   //
   //    ParsedDataPacket<List<String>, String> stateCodes = parser.parse(new StringRow(), stateFile,
-  // true);
+  //        true);
   //
   //    // Don't have to worry about headers because the parser stores them separately
   //    List<List<String>> parsedStates = stateCodes.parsedRows();

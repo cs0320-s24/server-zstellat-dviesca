@@ -35,6 +35,7 @@ public class ViewHandler implements Route {
 
   /**
    * Helper class called by the handle method to view the loaded csv.
+   *
    * @return a serialized Json containing either the loaded csv data or error data.
    * @throws RuntimeException if an error occurs while trying to create a Json from the data.
    */
@@ -56,12 +57,13 @@ public class ViewHandler implements Route {
     return new CSVViewSuccessResponse(responseMap).serialize();
   }
 
-/**
- * Class used to serialize a success response for a CSV view operation
- * @param responseType a String containing the response type, i.e. "success"
- * @param responseMap a Map of String, Object pairs containing important info about the response
- *                    including the rows of parsed data.
- */
+  /**
+   * Class used to serialize a success response for a CSV view operation
+   *
+   * @param responseType a String containing the response type, i.e. "success"
+   * @param responseMap a Map of String, Object pairs containing important info about the response
+   *     including the rows of parsed data.
+   */
   public record CSVViewSuccessResponse(String responseType, Map<String, Object> responseMap) {
     public CSVViewSuccessResponse(Map<String, Object> responseMap) {
       this("success", responseMap);
@@ -75,6 +77,7 @@ public class ViewHandler implements Route {
 
   /**
    * Class used to serialize a failure response for a CSV view operation.
+   *
    * @param responseType a String containing the response type, i.e. "error"
    * @param responseMap is a Map of String, Object pairs containing pertinent error information.
    */

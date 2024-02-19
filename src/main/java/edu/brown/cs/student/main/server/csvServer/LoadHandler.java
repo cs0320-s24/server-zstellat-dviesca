@@ -24,6 +24,7 @@ public class LoadHandler implements Route {
 
   /**
    * Constructor for the LoadHandler class. Sets up important variables and instantiates the logger.
+   * TODO: Check TODO in loadCSV method and alter abs path
    *
    * @param logger the log object used to log actions
    */
@@ -67,8 +68,10 @@ public class LoadHandler implements Route {
     return this.loadCSV(route, hasHeaderString);
   }
 
+  // http://localhost:3232/loadcsv?filepath=RI_Town_Income.csv&hasHeader=true
   /**
    * Helper class called by the handle method to parse the given csv.
+   *
    * @param relativeFilePath a String containing the user's inputted file path for 'filepath'
    * @param hasHeaderString A string containing the user's inputted information about 'hasHeader'
    * @return a serialized Json containing response info about the process.
@@ -80,6 +83,13 @@ public class LoadHandler implements Route {
     String dataRootPath = "data/";
     String csvFilePath = dataRootPath + this.relativePath;
     Map<String, Object> responseMap = new HashMap<>();
+
+    // To prevent empty queries
+    if (this.relativePath.isEmpty()) {
+      responseMap.put("Error", "Invalid file path specified");
+      responseMap.put("FilePath", this.relativePath);
+      return new CSVFailureResponse(responseMap).serialize();
+    }
 
     // To further prevent from traversal attacks sample opens the file to analyze its path without
     // directly opening it.
@@ -93,8 +103,10 @@ public class LoadHandler implements Route {
       responseMap.put("Route", this.relativePath);
       return new CSVFailureResponse(responseMap).serialize();
     }
-    String absPath = "/Users/domingojr/IdeaProjects/server-zstellat-dviesca/data";
-    // if path if the given absolute path is not contained some traversal has taken place
+
+    // TODO: Must be changed for each user running the code
+    String absPath = "/Users/zach.stellato/Documents/Code/cs0320/server-zstellat-dviesca/data/";
+    // if the given absolute path is not contained some traversal has taken place
     if (!canonicalPath.contains(absPath)) {
       responseMap.put("Error", "Malicious traversal of directory");
       responseMap.put("Route", this.relativePath);
@@ -142,6 +154,7 @@ public class LoadHandler implements Route {
 
   /**
    * Class used to serialize a success response for a CSV load operation
+   *
    * @param responseType a String containing the response type, i.e. "success"
    * @param responseMap a Map of String, Object pairs containing important info about the process.
    */
@@ -158,9 +171,9 @@ public class LoadHandler implements Route {
     }
   }
 
-
   /**
    * Class used to serialize a failure response for a CSV load operation.
+   *
    * @param responseType a String containing the response type, i.e. "error"
    * @param responseMap is a Map of String, Object pairs containing pertinent error information.
    */

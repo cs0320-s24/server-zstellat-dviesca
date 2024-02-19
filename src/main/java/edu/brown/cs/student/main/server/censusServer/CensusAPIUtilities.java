@@ -13,6 +13,12 @@ import java.util.List;
 
 public class CensusAPIUtilities {
 
+  /**
+   * HELPFUL INFO: This is a request for county data inside a state with state code (06)
+   * 'https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:06' Returns: [ [
+   * "NAME", "state", "county" ], [ "Colusa County, California" , "06", "011" ], ... ] List < List <
+   * String > > <--- csv pretty much -- StringList csv containing headers.
+   */
   private CensusAPIUtilities() {}
 
   public static List<CensusData> deserializeCensus(String jsonList) throws IOException {
