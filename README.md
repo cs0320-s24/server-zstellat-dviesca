@@ -6,6 +6,7 @@ Total Estimated time on project: 25-30 hours
 
 Git repo link: https://github.com/cs0320-s24/server-zstellat-dviesca.git
 
+
 This project builds on the first sprint where we made a CSV parser that took in a csv and parsed its rows into 
 whatever form a class outlined. In this server it was used to parse CSV's that were already on the back end, as well
 as parsing that is queried from the US census website. For the Census: we query the census API, deserialize the JSON data,

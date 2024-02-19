@@ -10,19 +10,19 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import spark.Request;
 import spark.Response;
 import spark.Route;
+
+import static spark.Spark.after;
 
 public class LoadHandler implements Route {
   private static Logger LOGGER;
   private ParsedDataPacket<List<String>, String> dataPacket;
   private boolean isLoaded;
 
-  // TODO: this isn't really helpful because the only time we need it is when we are calling it
-  //  in the Failure Response class, but that isn't part of the LoadHandlerClass and so it isnt
-  //  accessible.
   private String relativePath;
 
   /**
