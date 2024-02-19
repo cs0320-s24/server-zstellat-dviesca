@@ -32,21 +32,28 @@ public class SearchHandler implements Route {
    * Method when the searchCSV route is called by the server, it checks the query parameters and
    * then calls a helper method to perform the searching.
    *
-   * @param request
-   * @param response
-   * @return
-   * @throws Exception
+   * @param request the request passed by the frontend user
+   * @param response a json containing data about the response.
+   * @return a response json containing information about how the searching process went.
+   * @throws RuntimeException if an error occurs while trying to create a Json from the data.
    */
-  // TODO
   @Override
-  public Object handle(Request request, Response response) throws Exception {
+  public Object handle(Request request, Response response) throws RuntimeException {
     String searchTerm = request.queryParams("searchTerm");
     String columnIdentifier = request.queryParams("columnIdentifier");
 
     return this.searchCSV(searchTerm, columnIdentifier);
   }
 
-  public Object searchCSV(String searchTerm, String columnIdentifier) {
+  /**
+   * Helper class called by the handle method to search the loaded csv.
+   * @param searchTerm a String containing the user's inputted data 'searchTerm'
+   * @param columnIdentifier An optional string containing the user's inputted data about
+   *                        'columnIdentifier'
+   * @return a serialized Json containing response info about output, error or any valid matches.
+   * @throws RuntimeException if an error occurs while trying to create a Json from the data.
+   */
+  public Object searchCSV(String searchTerm, String columnIdentifier) throws RuntimeException {
     Map<String, Object> responseMap = new HashMap<>();
 
     // This ensures that a csvFile has already been loaded

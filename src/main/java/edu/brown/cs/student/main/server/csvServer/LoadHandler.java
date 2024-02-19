@@ -57,16 +57,23 @@ public class LoadHandler implements Route {
    * @param request the request passed by the frontend user
    * @param response a json containing data about the response.
    * @return a response json containing information about how the loading process went.
+   * @throws RuntimeException if an error occurs while trying to create a Json from the data.
    */
   @Override
-  public Object handle(Request request, Response response) {
+  public Object handle(Request request, Response response) throws RuntimeException {
     String route = request.queryParams("filepath");
     String hasHeaderString = request.queryParams("hasHeader");
-    String optional = request.queryParams("optional");
 
     return this.loadCSV(route, hasHeaderString);
   }
 
+  /**
+   * Helper class called by the handle method to parse the given csv.
+   * @param relativeFilePath a String containing the user's inputted file path for 'filepath'
+   * @param hasHeaderString A string containing the user's inputted information about 'hasHeader'
+   * @return a serialized Json containing response info about the process.
+   * @throws RuntimeException if an error occurs while trying to create a Json from the data.
+   */
   private Object loadCSV(String relativeFilePath, String hasHeaderString) throws RuntimeException {
     this.relativePath = relativeFilePath;
     // to protect data on the computer the reader will look only within defined csvFilePath package
@@ -74,7 +81,7 @@ public class LoadHandler implements Route {
     String csvFilePath = dataRootPath + this.relativePath;
     Map<String, Object> responseMap = new HashMap<>();
 
-    // to further prevent from traversal attacks sample opens the file to analyze its path without
+    // To further prevent from traversal attacks sample opens the file to analyze its path without
     // directly opening it.
     File file = new File(csvFilePath);
     String canonicalPath = "";
@@ -82,14 +89,14 @@ public class LoadHandler implements Route {
       canonicalPath = file.getCanonicalPath();
     } catch (IOException e) {
       // Handle IOException if nonexistent file
-      responseMap.put("Error", "Error opening up desired file IO");
+      responseMap.put("Error", "Failed to open the desired file IO");
       responseMap.put("Route", this.relativePath);
       return new CSVFailureResponse(responseMap).serialize();
     }
     String absPath = "/Users/domingojr/IdeaProjects/server-zstellat-dviesca/data";
     // if path if the given absolute path is not contained some traversal has taken place
     if (!canonicalPath.contains(absPath)) {
-      responseMap.put("Error", "Malicious traversal of directory error");
+      responseMap.put("Error", "Malicious traversal of directory");
       responseMap.put("Route", this.relativePath);
       return new CSVFailureResponse(responseMap).serialize();
     }
