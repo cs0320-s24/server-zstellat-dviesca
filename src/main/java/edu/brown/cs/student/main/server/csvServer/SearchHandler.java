@@ -28,6 +28,7 @@ public class SearchHandler implements Route {
     this.loadHandler = loadHandler;
   }
 
+  // http://localhost:3232/searchcsv?searchTerm=East+Providence&?columnIdentifier=City/Town
   /**
    * Method when the searchCSV route is called by the server, it checks the query parameters and
    * then calls a helper method to perform the searching.
