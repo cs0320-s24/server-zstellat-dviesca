@@ -48,6 +48,16 @@ library, so it is very possible that there are bugs or errors that we oversaw ou
 points of failure.
 
 # Tests
+ChatGPT was used to formulate ideas of test cases.
+For Integration Tests - Make sure Maven is set up in your project, Run mvn test -Dtest=*IntegrationTest in 
+the main folder. These tests check if the server correctly handles different web requests. Essentially, it's the same as
+trying a bunch of requests in your browser.
+
+For Unit Tests - Run mvn test -Dtest=*UnitTest from the main project folder. The Unit tests check new code parts like 
+message handling or caching, without needing the whole server. They are helpful to make sure that when developers use
+our code, it works, even in a different java app.
+
+Mocking - We use mocking for tests to avoid too many real API calls. We can use dependency injection
 
 
 # How to...

@@ -10,13 +10,10 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import spark.Request;
 import spark.Response;
 import spark.Route;
-
-import static spark.Spark.after;
 
 public class LoadHandler implements Route {
   private static Logger LOGGER;

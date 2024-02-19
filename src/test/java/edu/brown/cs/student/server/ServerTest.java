@@ -1,4 +1,3 @@
 package edu.brown.cs.student.server;
 
-public class ServerTest {
-}
+public class ServerTest {}

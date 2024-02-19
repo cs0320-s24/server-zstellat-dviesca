@@ -2,12 +2,11 @@ package edu.brown.cs.student.main.server.csvServer;
 
 import com.squareup.moshi.Moshi;
 import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
+import edu.brown.cs.student.main.csv.csvoperations.Searcher;
+import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import edu.brown.cs.student.main.csv.csvoperations.Searcher;
-import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import org.slf4j.Logger;
 import spark.Request;
 import spark.Response;
@@ -18,12 +17,11 @@ public class SearchHandler implements Route {
   private LoadHandler loadHandler;
 
   /**
-   * Constructor for SearchHandler.
-   * Initializes a new SearchHandler instance with specified Logger and LoadHandler.
-   * ChatGPT was utilized to help create simple javadocs.
+   * Constructor for SearchHandler. Initializes a new SearchHandler instance with specified Logger
+   * and LoadHandler. ChatGPT was utilized to help create simple javadocs.
    *
-   * @param logger        The logger used for logging information and errors.
-   * @param loadHandler   The LoadHandler instance used for handling CSV file loading operations.
+   * @param logger The logger used for logging information and errors.
+   * @param loadHandler The LoadHandler instance used for handling CSV file loading operations.
    */
   public SearchHandler(Logger logger, LoadHandler loadHandler) {
     LOGGER = logger;
@@ -31,8 +29,9 @@ public class SearchHandler implements Route {
   }
 
   /**
-   * Method when the searchCSV route is called by the server, it checks the query parameters and then calls
-   * a helper method to perform the searching.
+   * Method when the searchCSV route is called by the server, it checks the query parameters and
+   * then calls a helper method to perform the searching.
+   *
    * @param request
    * @param response
    * @return
@@ -46,7 +45,6 @@ public class SearchHandler implements Route {
 
     return this.searchCSV(searchTerm, columnIdentifier);
   }
-
 
   public Object searchCSV(String searchTerm, String columnIdentifier) {
     Map<String, Object> responseMap = new HashMap<>();
@@ -95,8 +93,8 @@ public class SearchHandler implements Route {
   }
 
   /**
-   * Represents a failure response for a CSV search operation.
-   * This record holds the response type and a map of the response data, typically containing error information.
+   * Represents a failure response for a CSV search operation. This record holds the response type
+   * and a map of the response data, typically containing error information.
    */
   public record CSVSearchFailureResponse(String responseType, Map<String, Object> responseMap) {
     public CSVSearchFailureResponse(Map<String, Object> responseMap) {
