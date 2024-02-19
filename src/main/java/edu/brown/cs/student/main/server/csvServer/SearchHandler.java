@@ -81,6 +81,12 @@ public class SearchHandler implements Route {
     }
   }
 
+  /**
+   * Class used to serialize a success response for a CSV search operation
+   * @param responseType a String containing the response type, i.e. "success"
+   * @param responseMap a Map of String, Object pairs containing important info about the
+   *                    process and the results.
+   */
   public record CSVSearchSuccessResponse(String responseType, Map<String, Object> responseMap) {
     public CSVSearchSuccessResponse(Map<String, Object> responseMap) {
       this("success", responseMap);
@@ -93,8 +99,9 @@ public class SearchHandler implements Route {
   }
 
   /**
-   * Represents a failure response for a CSV search operation. This record holds the response type
-   * and a map of the response data, typically containing error information.
+   * Class used to serialize a failure response for a CSV search operation.
+   * @param responseType a String containing the response type, i.e. "error"
+   * @param responseMap is a Map of String, Object pairs containing pertinent error information.
    */
   public record CSVSearchFailureResponse(String responseType, Map<String, Object> responseMap) {
     public CSVSearchFailureResponse(Map<String, Object> responseMap) {

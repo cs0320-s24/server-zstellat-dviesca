@@ -23,14 +23,14 @@ public class LoadHandler implements Route {
   private String relativePath;
 
   /**
-   * Constructor for the
+   * Constructor for the LoadHandler class. Sets up important variables and instantiates the logger.
    *
-   * @param logger the log files
+   * @param logger the log object used to log actions
    */
   public LoadHandler(Logger logger) {
     LOGGER = logger;
     this.isLoaded = false;
-    this.relativePath = "No File Path Specified";
+    this.relativePath = "No File Path Specified"; // Temporary until overwritten by handle call.
   }
 
   /**
@@ -51,14 +51,12 @@ public class LoadHandler implements Route {
     return this.dataPacket;
   }
 
-  // TODO
   /**
-   * Method takes in requests from the server and calls
+   * Method takes in requests from the server and calls helper method, loadCSV with queryparams.
    *
    * @param request the request passed by the frontend user
    * @param response a json containing data about the response.
-   * @return
-   * @throws Exception
+   * @return a response json containing information about how the loading process went.
    */
   @Override
   public Object handle(Request request, Response response) {
@@ -109,6 +107,7 @@ public class LoadHandler implements Route {
       return new CSVFailureResponse(responseMap).serialize();
     }
 
+    // This reads and parses the file
     try {
       Reader csvReader = new FileReader(csvFilePath);
       this.dataPacket =
@@ -134,6 +133,11 @@ public class LoadHandler implements Route {
     }
   }
 
+  /**
+   * Class used to serialize a success response for a CSV load operation
+   * @param responseType a String containing the response type, i.e. "success"
+   * @param responseMap a Map of String, Object pairs containing important info about the process.
+   */
   public record CSVLoadedSuccessResponse(String responseType, Map<String, Object> responseMap) {
     public CSVLoadedSuccessResponse(Map<String, Object> responseMap) {
       this("success", responseMap);
@@ -147,6 +151,12 @@ public class LoadHandler implements Route {
     }
   }
 
+
+  /**
+   * Class used to serialize a failure response for a CSV load operation.
+   * @param responseType a String containing the response type, i.e. "error"
+   * @param responseMap is a Map of String, Object pairs containing pertinent error information.
+   */
   public record CSVFailureResponse(String responseType, Map<String, Object> responseMap) {
     public CSVFailureResponse(Map<String, Object> responseMap) {
       this("error", responseMap);
