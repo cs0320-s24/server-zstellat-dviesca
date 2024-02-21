@@ -2,6 +2,7 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
+import edu.brown.cs.student.main.server.cache.Proxy;
 import edu.brown.cs.student.main.server.censusServer.BroadbandHandler;
 import edu.brown.cs.student.main.server.csvServer.LoadHandler;
 import edu.brown.cs.student.main.server.csvServer.SearchHandler;
@@ -51,6 +52,7 @@ public class Server {
     //      System.err.println("Errored while deserializing the census data"); // ODO this is wrong
     //    }
 
+    Proxy proxy = new Proxy();
     // TODO is starting as null ok? could have a constructor that makes it just have a boolean as
     // false
     LoadHandler loadHandler = new LoadHandler(LOGGER);
@@ -59,7 +61,7 @@ public class Server {
     Spark.get("loadcsv", loadHandler);
     Spark.get("viewcsv", new ViewHandler(LOGGER, loadHandler));
     Spark.get("searchcsv", new SearchHandler(LOGGER, loadHandler));
-    Spark.get("broadband", new BroadbandHandler()); // TODO for the censusoperations case
+    Spark.get("broadband", new BroadbandHandler(proxy)); // TODO for the censusoperations case
 
     Spark.init();
     Spark.awaitInitialization();

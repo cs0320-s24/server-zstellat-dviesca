@@ -7,7 +7,9 @@ import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CensusAPIUtilities {
 
@@ -77,19 +79,13 @@ public class CensusAPIUtilities {
     return adapter.toJson(censusData);
   }
 
-  public static CensusData deserializeCensusData(String jsonCensusData){
-    try{
-      Moshi moshi = new Moshi.Builder().build();
+  public static List<CensusData> deserializeCensusData(String jsonCensusData) throws IOException {
+    Moshi moshi = new Moshi.Builder().build();
 
-      JsonAdapter<CensusData> adapter = moshi.adapter(CensusData.class);
+    Type listOfCensusData = Types.newParameterizedType(List.class, CensusData.class);
+    JsonAdapter<List<CensusData>> adapter = moshi.adapter(listOfCensusData);
 
-      CensusData censusData = adapter.fromJson(jsonCensusData);
-
-      return censusData;
-    } catch (IOException e){
-      //TODO FIX THIS ERROR HANDLING ---------------------------------------------------------------
-      return new CensusData();
-    }
+    return adapter.fromJson(jsonCensusData);
   }
 
   // TODO do the serialize and deserialize equivalents for soup if CensusData was a menu
@@ -102,4 +98,22 @@ public class CensusAPIUtilities {
       return "Error in reading JSON";
     }
   }
+
+
+  /**
+   * Creates a map from a list of Census data returned by the API.
+   * @param countyData List of CensusData
+   * @return a map (CountyName --> CountyCode)
+   */
+  public static Map<String, String> createCountyNameToCodeMap(List<CensusData> countyData) {
+    Map<String, String> countyNameToCodeMap = new HashMap<>();
+
+    for (int i = 1; i < countyData.size(); i++) { // TODO: Do we need to start at 1 or 0?
+      CensusData censusItem = countyData.get(i);
+      countyNameToCodeMap.put(censusItem.getNAME(), censusItem.getCounty());
+    }
+    return countyNameToCodeMap;
+  }
+
+
 }

@@ -4,6 +4,7 @@ import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
 import edu.brown.cs.student.main.csv.csvoperations.Parser;
 import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
+import edu.brown.cs.student.main.server.cache.Proxy;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
@@ -20,6 +21,7 @@ import spark.Route;
 
 public class BroadbandHandler implements Route {
 
+  private Proxy proxy;
   private HashMap<String, String> stateToNumberMap;
   private HashMap<String, String> numberToStateMap;
 
@@ -27,7 +29,8 @@ public class BroadbandHandler implements Route {
    * Constructor for the broadBandHandler class. Sets up maps that will be used for the state to
    * state ID conversions.
    */
-  public BroadbandHandler() {
+  public BroadbandHandler(Proxy proxy) {
+    this.proxy = proxy;
     this.createStateNumberMaps();
   }
 
@@ -48,53 +51,44 @@ public class BroadbandHandler implements Route {
     Map<String, Object> responseMap = new HashMap<>();
 
 
-// TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // TODO: If (exists) --> Before making a query, check if it already exists in the cache
+    // If (state data doesn't exist) --> Send BroadbandRequest to get the data, parse the data, and
+    // add the data to the cache
+    if (this.proxy.getStateToCountyCodeMap().get(stateCode) == null) {
+      try {
+        String countyResponse = this.sendCountyRequest(stateCode, county);
+        List<CensusData> countyData = CensusAPIUtilities.deserializeCensusData(countyResponse);
+        Map<String, String> countyNameToCodeMap =
+            CensusAPIUtilities.createCountyNameToCodeMap(countyData);
+        this.proxy.addStateToCountyCodes(stateCode, countyNameToCodeMap);
+      } catch (IOException e) {
+        responseMap.put("Error", "Could not request county code from API. Either State or County name"
+            + " is invalid.");
+        responseMap.put("State", state);
+        responseMap.put("County", county);
+        return new BroadbandFailureResponse(responseMap).serialize();
+      }
+    }
 
-
-
-    // TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // TODO: Else () --> Send BroadbandRequest to get the data
-    //               --> Parse the data
-    //               --> Add the data to the cache
-
-    String countyResponse = this.sendCountyRequest(stateCode, county);
-    CensusData countyData = CensusAPIUtilities.deserializeCensusData(countyResponse);
-    // Im making a class with a constructor parameter a List<CensusData> so I need you to give that to me
-    // ANd then im thinking that we do this, we add the thing I made,
-    // which will return a map(countyMap-->code)
-    // We add that object to a map contained within the cache that goes map(stateCode-->countyCodeMapObject)
-
-    String countyCode = countyData.
-
-
-
-
-
-
-
-
-
-    // TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    // TODO: Else () --> Send BroadbandRequest to get the data
-    //               --> Parse the data
-    //               --> Add the data to the cache
-
-
-
-
-
-
-
-
-
-
-
+    String countyCode = this.proxy.getStateToCountyCodeMap().get(stateCode).get(county);
+    if (countyCode == null) {
+      responseMap.put("Error", "County code not found in API State to County Code data");
+      responseMap.put("State", state);
+      responseMap.put("County", county);
+      return new BroadbandFailureResponse(responseMap).serialize();
+    }
 
 // TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     // TODO: --> Search the data with the state code
     //  return --> A success JSON containing that good good  informational
+    try {
 
+      String dataResponse = this.sendBroadbandRequest(stateCode, countyCode);
+
+
+
+    } catch () {
+
+    }
 
 
 
@@ -103,10 +97,13 @@ public class BroadbandHandler implements Route {
     return null;
   }
 
-    private String sendBroadbandRequest(String stateCode, String county) throws URISyntaxException {
+    private String sendBroadbandRequest(String stateCode, String countyCode)
+        throws URISyntaxException {
       HttpRequest censusAPIRequest = HttpRequest.newBuilder().uri(new URI(
-   "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&for=county:" + county +
-           "&in=state:" + stateCode)).GET().build();
+   "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&"
+       + "for=county:" + countyCode + "&in=state:" + stateCode))
+          .GET()
+          .build();
 
       HttpResponse<String> sentAPIResponse = HttpClient.newBuilder()
               .build().send(censusAPIRequest, HttpResponse.BodyHandlers.ofString());
@@ -152,5 +149,13 @@ public class BroadbandHandler implements Route {
         System.err.println("Error: Could not read or parse data/stateCodes.csv File necessary for "
             + "converting state ID's to names in BroadBandHandler class.");
       }
+  }
+
+
+  // TODO: Create this class
+  private class BroadbandFailureResponse {
+
+    public BroadbandFailureResponse(Map<String, Object> responseMap) {
+    }
   }
 }
