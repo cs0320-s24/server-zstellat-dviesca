@@ -1,9 +1,7 @@
 package edu.brown.cs.student.main.server.censusServer;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.JsonDataException;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
+import com.squareup.moshi.*;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -42,6 +40,31 @@ public class CensusAPIUtilities {
       System.err.println("DataHandler: JSON wasn't in the right format.");
       throw e;
     }
+
+    // TODO: Should replicate this:
+    /**
+     * try {
+     *       // Initializes Moshi
+     *       Moshi moshi = new Moshi.Builder().build();
+     *
+     *       // Initializes an adapter to an Activity class then uses it to parse the JSON.
+     *       JsonAdapter<Activity> adapter = moshi.adapter(Activity.class);
+     *
+     *       Activity activity = adapter.fromJson(jsonActivity);
+     *
+     *       return activity;
+     *     }
+     *     // Returns an empty activity... Probably not the best handling of this error case...
+     *     // Notice an alternative error throwing case to the one done in OrderHandler. This catches
+     *     // the error instead of pushing it up.
+     *     catch (IOException e) {
+     *       e.printStackTrace();
+     *       return new Activity();
+     *     }
+     *   }
+     */
+
+
   }
 
   public static String serializeCensus(List<CensusData> censusData) {
@@ -52,6 +75,21 @@ public class CensusAPIUtilities {
     // Parse into a string with adapter
     JsonAdapter<List<CensusData>> adapter = moshi.adapter(listOfCensusDataType);
     return adapter.toJson(censusData);
+  }
+
+  public static CensusData deserializeCensusData(String jsonCensusData){
+    try{
+      Moshi moshi = new Moshi.Builder().build();
+
+      JsonAdapter<CensusData> adapter = moshi.adapter(CensusData.class);
+
+      CensusData censusData = adapter.fromJson(jsonCensusData);
+
+      return censusData;
+    } catch (IOException e){
+      //TODO FIX THIS ERROR HANDLING ---------------------------------------------------------------
+      return new CensusData();
+    }
   }
 
   // TODO do the serialize and deserialize equivalents for soup if CensusData was a menu

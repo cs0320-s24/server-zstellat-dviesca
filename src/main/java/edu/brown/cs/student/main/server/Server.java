@@ -2,7 +2,7 @@ package edu.brown.cs.student.main.server;
 
 import static spark.Spark.after;
 
-import edu.brown.cs.student.main.server.censusServer.BroadBandHandler;
+import edu.brown.cs.student.main.server.censusServer.BroadbandHandler;
 import edu.brown.cs.student.main.server.csvServer.LoadHandler;
 import edu.brown.cs.student.main.server.csvServer.SearchHandler;
 import edu.brown.cs.student.main.server.csvServer.ViewHandler;
@@ -59,7 +59,7 @@ public class Server {
     Spark.get("loadcsv", loadHandler);
     Spark.get("viewcsv", new ViewHandler(LOGGER, loadHandler));
     Spark.get("searchcsv", new SearchHandler(LOGGER, loadHandler));
-    Spark.get("broadband", new BroadBandHandler()); // TODO for the censusoperations case
+    Spark.get("broadband", new BroadbandHandler()); // TODO for the censusoperations case
 
     Spark.init();
     Spark.awaitInitialization();

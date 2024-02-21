@@ -8,7 +8,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +18,7 @@ import spark.Request;
 import spark.Response;
 import spark.Route;
 
-public class BroadBandHandler implements Route {
+public class BroadbandHandler implements Route {
 
   private HashMap<String, String> stateToNumberMap;
   private HashMap<String, String> numberToStateMap;
@@ -25,7 +27,7 @@ public class BroadBandHandler implements Route {
    * Constructor for the broadBandHandler class. Sets up maps that will be used for the state to
    * state ID conversions.
    */
-  public BroadBandHandler() {
+  public BroadbandHandler() {
     this.createStateNumberMaps();
   }
 
@@ -43,35 +45,86 @@ public class BroadBandHandler implements Route {
     String state = request.queryParams("state");
     String county = request.queryParams("county");
     String stateCode = this.stateToNumberMap.get(state);
-
-
-    // TODO: Before making a query, check if it already exists in the cache
-
-
-
     Map<String, Object> responseMap = new HashMap<>();
-    //    try{
-    //      String censusDataJSon = this.sendBroadbandRequest(state, county);
-    //    }
+
+
+// TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // TODO: If (exists) --> Before making a query, check if it already exists in the cache
+
+
+
+    // TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // TODO: Else () --> Send BroadbandRequest to get the data
+    //               --> Parse the data
+    //               --> Add the data to the cache
+
+    String countyResponse = this.sendCountyRequest(stateCode, county);
+    CensusData countyData = CensusAPIUtilities.deserializeCensusData(countyResponse);
+    // Im making a class with a constructor parameter a List<CensusData> so I need you to give that to me
+    // ANd then im thinking that we do this, we add the thing I made,
+    // which will return a map(countyMap-->code)
+    // We add that object to a map contained within the cache that goes map(stateCode-->countyCodeMapObject)
+
+    String countyCode = countyData.
+
+
+
+
+
+
+
+
+
+    // TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // TODO: Else () --> Send BroadbandRequest to get the data
+    //               --> Parse the data
+    //               --> Add the data to the cache
+
+
+
+
+
+
+
+
+
+
+
+
+// TODO: ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    // TODO: --> Search the data with the state code
+    //  return --> A success JSON containing that good good  informational
+
+
+
+
+
 
     return null;
   }
 
-    private String sendBroadbandRequest(String state, String county) throws URISyntaxException {
+    private String sendBroadbandRequest(String stateCode, String county) throws URISyntaxException {
       HttpRequest censusAPIRequest = HttpRequest.newBuilder().uri(new URI(
+   "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&for=county:" + county +
+           "&in=state:" + stateCode)).GET().build();
+
+      HttpResponse<String> sentAPIResponse = HttpClient.newBuilder()
+              .build().send(censusAPIRequest, HttpResponse.BodyHandlers.ofString());
 
 
-   "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&for=county:*&in=state:06")).GET().build();
-
-      return state;
+      return sentAPIResponse.body();
     }
 
-    private String sendCountryRequest(String stateCode, String county) throws URISyntaxException {
+    private String sendCountyRequest(String stateCode, String county) throws URISyntaxException {
       HttpRequest censusAPIRequest = HttpRequest.newBuilder().uri(new URI(
-          "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:" +
-              stateCode)).GET().build();
+          "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:" + county +
+                  "&in=state:" + stateCode)).GET().build();
 
-      return stateCode;
+      HttpResponse<String> sentAPIResponse = HttpClient.newBuilder()
+              .build().send(censusAPIRequest, HttpResponse.BodyHandlers.ofString());
+
+
+      return sentAPIResponse.body();
     }
 
     /**
