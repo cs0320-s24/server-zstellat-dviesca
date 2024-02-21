@@ -4,11 +4,10 @@ import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
 import edu.brown.cs.student.main.csv.csvoperations.Parser;
 import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
 import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.http.HttpRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -58,19 +57,21 @@ public class BroadBandHandler implements Route {
     return null;
   }
 
-    private String sendBroadbandRequest(String state, String county){
+    private String sendBroadbandRequest(String state, String county) throws URISyntaxException {
       HttpRequest censusAPIRequest = HttpRequest.newBuilder().uri(new URI(
 
 
    "https://api.census.gov/data/2021/acs/acs1/subject/variables?get=NAME,S2802_C03_022E&for=county:*&in=state:06")).GET().build();
 
+      return state;
     }
 
-    private String sendCountryRequest(String stateCode, String county){
+    private String sendCountryRequest(String stateCode, String county) throws URISyntaxException {
       HttpRequest censusAPIRequest = HttpRequest.newBuilder().uri(new URI(
           "https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:" +
               stateCode)).GET().build();
 
+      return stateCode;
     }
 
     /**
