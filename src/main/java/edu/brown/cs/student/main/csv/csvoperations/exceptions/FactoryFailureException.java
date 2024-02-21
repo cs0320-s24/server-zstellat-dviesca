@@ -33,6 +33,7 @@ public class FactoryFailureException extends Exception {
    * @param responseMap a response map with info about the error and relevant data
    */
   public FactoryFailureException(Map<String, Object> responseMap) {
+    super("Error: FactoryFailureException");
     this.responseMap = responseMap;
   }
 

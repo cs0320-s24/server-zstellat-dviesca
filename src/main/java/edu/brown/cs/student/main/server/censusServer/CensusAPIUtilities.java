@@ -1,18 +1,24 @@
 package edu.brown.cs.student.main.server.censusServer;
 
-import com.squareup.moshi.JsonAdapter;
-import com.squareup.moshi.JsonDataException;
-import com.squareup.moshi.Moshi;
-import com.squareup.moshi.Types;
+import com.squareup.moshi.*;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CensusAPIUtilities {
 
+  /**
+   * HELPFUL INFO: This is a request for county data inside a state with state code (06)
+   * 'https://api.census.gov/data/2010/dec/sf1?get=NAME&for=county:*&in=state:06' Returns: [ [
+   * "NAME", "state", "county" ], [ "Colusa County, California" , "06", "011" ], ... ] List < List <
+   * String > > <--- csv pretty much -- StringList csv containing headers.
+   */
   private CensusAPIUtilities() {}
 
   public static List<CensusData> deserializeCensus(String jsonList) throws IOException {
@@ -36,6 +42,31 @@ public class CensusAPIUtilities {
       System.err.println("DataHandler: JSON wasn't in the right format.");
       throw e;
     }
+
+    // TODO: Should replicate this:
+    /**
+     * try {
+     *       // Initializes Moshi
+     *       Moshi moshi = new Moshi.Builder().build();
+     *
+     *       // Initializes an adapter to an Activity class then uses it to parse the JSON.
+     *       JsonAdapter<Activity> adapter = moshi.adapter(Activity.class);
+     *
+     *       Activity activity = adapter.fromJson(jsonActivity);
+     *
+     *       return activity;
+     *     }
+     *     // Returns an empty activity... Probably not the best handling of this error case...
+     *     // Notice an alternative error throwing case to the one done in OrderHandler. This catches
+     *     // the error instead of pushing it up.
+     *     catch (IOException e) {
+     *       e.printStackTrace();
+     *       return new Activity();
+     *     }
+     *   }
+     */
+
+
   }
 
   public static String serializeCensus(List<CensusData> censusData) {
@@ -48,6 +79,15 @@ public class CensusAPIUtilities {
     return adapter.toJson(censusData);
   }
 
+  public static List<CensusData> deserializeCensusData(String jsonCensusData) throws IOException {
+    Moshi moshi = new Moshi.Builder().build();
+
+    Type listOfCensusData = Types.newParameterizedType(List.class, CensusData.class);
+    JsonAdapter<List<CensusData>> adapter = moshi.adapter(listOfCensusData);
+
+    return adapter.fromJson(jsonCensusData);
+  }
+
   // TODO do the serialize and deserialize equivalents for soup if CensusData was a menu
 
   // TODO for sprint2 do the readInJson method for the non http request case
@@ -58,4 +98,22 @@ public class CensusAPIUtilities {
       return "Error in reading JSON";
     }
   }
+
+
+  /**
+   * Creates a map from a list of Census data returned by the API.
+   * @param countyData List of CensusData
+   * @return a map (CountyName --> CountyCode)
+   */
+  public static Map<String, String> createCountyNameToCodeMap(List<CensusData> countyData) {
+    Map<String, String> countyNameToCodeMap = new HashMap<>();
+
+    for (int i = 1; i < countyData.size(); i++) { // TODO: Do we need to start at 1 or 0?
+      CensusData censusItem = countyData.get(i);
+      countyNameToCodeMap.put(censusItem.getNAME(), censusItem.getCounty());
+    }
+    return countyNameToCodeMap;
+  }
+
+
 }

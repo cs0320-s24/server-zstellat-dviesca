@@ -133,10 +133,8 @@ public class Searcher<T, J> {
         }
       }
     } catch (FactoryFailureException e) {
-      System.out.println("generic type t");
       throw new FactoryFailureException("Generic type <T> does not support search by column");
     } catch (IllegalArgumentException e) {
-      System.out.println("illegal argument");
       Map<String, Object> responseMap = new HashMap<>();
       responseMap.put(
           "Error",
@@ -145,7 +143,6 @@ public class Searcher<T, J> {
       responseMap.put("Row being searched", currentRow);
       throw new FactoryFailureException(responseMap);
     } catch (IndexOutOfBoundsException e) {
-      System.out.println("out of bounds");
       Map<String, Object> responseMap = new HashMap<>();
       responseMap.put(
           "Error",
@@ -155,7 +152,6 @@ public class Searcher<T, J> {
       responseMap.put("Row being searched", currentRow);
       throw new FactoryFailureException(responseMap);
     }
-    System.out.println("all good returning stuff");
     return matchingRows;
   }
 }
