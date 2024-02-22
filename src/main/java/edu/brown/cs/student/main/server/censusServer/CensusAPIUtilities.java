@@ -1,11 +1,14 @@
 package edu.brown.cs.student.main.server.censusServer;
 
 import com.squareup.moshi.*;
+import edu.brown.cs.student.main.csv.csvoperations.ParsedDataPacket;
+import edu.brown.cs.student.main.csv.csvoperations.Parser;
+import edu.brown.cs.student.main.csv.csvoperations.exceptions.FactoryFailureException;
+import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,54 +24,52 @@ public class CensusAPIUtilities {
    */
   private CensusAPIUtilities() {}
 
-  public static List<CensusData> deserializeCensus(String jsonList) throws IOException {
-    List<CensusData> dataPieces = new ArrayList<>();
+  public static List<CensusData> deserializeCensus(String jsonList)
+      throws IOException, JsonDataException {
+    // initialize moshi
+//    Moshi moshi = new Moshi.Builder().build();
+//    // create lisType for adapter
+//    Type listType = Types.newParameterizedType(List.class, CensusData.class);
+//    // parse into list of CensusData with adapter
+//    JsonAdapter<List<CensusData>> adapter = moshi.adapter(listType);
+//    System.out.println("Data STUFF: " + adapter.fromJson(jsonList));
+//    return adapter.fromJson(jsonList);
+
+
+    ArrayList<CensusData> censusDataList = new ArrayList<>();
+    Parser<List<String>, String> parser = new Parser<>();
+    ParsedDataPacket<List<String>, String> packet = null;
     try {
-      // initialize moshi
-      Moshi moshi = new Moshi.Builder().build();
-      // create lisType for adapter
-      Type listType = Types.newParameterizedType(List.class, CensusData.class);
-      // parse into list of CensusData with adapter
-      JsonAdapter<List<CensusData>> adapter = moshi.adapter(listType);
-
-      List<CensusData> deserializedData = adapter.fromJson(jsonList);
-      return deserializedData;
+      packet =
+              parser.parse(new StringRow(), new StringReader(jsonList), true);
+    } catch (Exception e) {
+      System.out.println("Fail");
     }
-    // catch the moshi IO exception
-    catch (IOException e) {
-      System.err.println("DataHandler: string wasn't valid JSON.");
-      throw e;
-    } catch (JsonDataException e) {
-      System.err.println("DataHandler: JSON wasn't in the right format.");
-      throw e;
+    List<String> header = packet.headers();
+    censusDataList.add(new CensusData(header.get(0), header.get(1), header.get(2), header.get(4)));
+    for (List<String>  s: packet.parsedRows() ) {
+      censusDataList.add(new CensusData(s.get(0), s.get(1), s.get(2), s.get(4)));
     }
-
-    // TODO: Should replicate this:
-    /**
-     * try {
-     *       // Initializes Moshi
-     *       Moshi moshi = new Moshi.Builder().build();
-     *
-     *       // Initializes an adapter to an Activity class then uses it to parse the JSON.
-     *       JsonAdapter<Activity> adapter = moshi.adapter(Activity.class);
-     *
-     *       Activity activity = adapter.fromJson(jsonActivity);
-     *
-     *       return activity;
-     *     }
-     *     // Returns an empty activity... Probably not the best handling of this error case...
-     *     // Notice an alternative error throwing case to the one done in OrderHandler. This catches
-     *     // the error instead of pushing it up.
-     *     catch (IOException e) {
-     *       e.printStackTrace();
-     *       return new Activity();
-     *     }
-     *   }
-     */
+    System.out.println(censusDataList);
+    return censusDataList;
 
 
   }
 
+  // TODO: Should replicate this:
+  /**
+   * try { // Initializes Moshi Moshi moshi = new Moshi.Builder().build();
+   *
+   * <p>// Initializes an adapter to an Activity class then uses it to parse the JSON.
+   * JsonAdapter<Activity> adapter = moshi.adapter(Activity.class);
+   *
+   * <p>Activity activity = adapter.fromJson(jsonActivity);
+   *
+   * <p>return activity; } // Returns an empty activity... Probably not the best handling of this
+   * error case... // Notice an alternative error throwing case to the one done in OrderHandler.
+   * This catches // the error instead of pushing it up. catch (IOException e) {
+   * e.printStackTrace(); return new Activity(); } }
+   */
   public static String serializeCensus(List<CensusData> censusData) {
     // initialize moshi
     Moshi moshi = new Moshi.Builder().build();
@@ -79,41 +80,40 @@ public class CensusAPIUtilities {
     return adapter.toJson(censusData);
   }
 
-  public static List<CensusData> deserializeCensusData(String jsonCensusData) throws IOException {
-    Moshi moshi = new Moshi.Builder().build();
+  public static List<CountyCodeData> deserializeCensusData(String jsonCensusData)
+      throws IOException, FactoryFailureException {
+    // Moshi moshi = new Moshi.Builder().build();
 
-    Type listOfCensusData = Types.newParameterizedType(List.class, CensusData.class);
-    JsonAdapter<List<CensusData>> adapter = moshi.adapter(listOfCensusData);
-
-    return adapter.fromJson(jsonCensusData);
-  }
-
-  // TODO do the serialize and deserialize equivalents for soup if CensusData was a menu
-
-  // TODO for sprint2 do the readInJson method for the non http request case
-  public static String readInJson(String filepath) {
-    try {
-      return new String(Files.readAllBytes(Paths.get(filepath)));
-    } catch (IOException e) {
-      return "Error in reading JSON";
+    //Type listOfCensusData = Types.newParameterizedType(List.class, CountyCodeData.class);
+    //JsonAdapter<List<CountyCodeData>> adapter = moshi.adapter(listOfCensusData);
+    //System.out.println("CountyCODE STUFF: " + adapter.fromJson(jsonCensusData));
+    ArrayList<CountyCodeData> censusDataList = new ArrayList<>();
+    Parser<List<String>, String> parser = new Parser<>();
+    ParsedDataPacket<List<String>, String> packet = null;
+    packet = parser.parse(new StringRow(), new StringReader(jsonCensusData), true);
+    ArrayList<String> header = packet.headers();
+    CountyCodeData thing = new CountyCodeData(header.get(0), header.get(1), header.get(2));
+    censusDataList.add(thing);
+    for (List<String>  s: packet.parsedRows() ) {
+      censusDataList.add(new CountyCodeData(s.get(0), s.get(1), s.get(2)));
     }
+    return censusDataList;
   }
 
 
   /**
    * Creates a map from a list of Census data returned by the API.
+   *
    * @param countyData List of CensusData
    * @return a map (CountyName --> CountyCode)
    */
-  public static Map<String, String> createCountyNameToCodeMap(List<CensusData> countyData) {
+  public static Map<String, String> createCountyNameToCodeMap(List<CountyCodeData> countyData) {
     Map<String, String> countyNameToCodeMap = new HashMap<>();
 
     for (int i = 1; i < countyData.size(); i++) { // TODO: Do we need to start at 1 or 0?
-      CensusData censusItem = countyData.get(i);
-      countyNameToCodeMap.put(censusItem.getNAME(), censusItem.getCounty());
+      CountyCodeData censusItem = countyData.get(i);
+      countyNameToCodeMap.put(censusItem.NAME(), censusItem.county());
     }
     return countyNameToCodeMap;
   }
-
-
 }

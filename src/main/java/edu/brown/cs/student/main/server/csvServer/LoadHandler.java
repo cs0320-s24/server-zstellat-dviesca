@@ -105,7 +105,7 @@ public class LoadHandler implements Route {
     }
 
     // TODO: Must be changed for each user running the code
-    String absPath = "/Users/zach.stellato/Documents/Code/cs0320/server-zstellat-dviesca/data/";
+    String absPath = "/Users/domingojr/IdeaProjects/server-zstellat-dviesca/data";
     // if the given absolute path is not contained some traversal has taken place
     if (!canonicalPath.contains(absPath)) {
       responseMap.put("Error", "Malicious traversal of directory");
@@ -135,9 +135,7 @@ public class LoadHandler implements Route {
       responseMap.put("Success", "CSV File was parsed correctly");
       responseMap.put("File Path", this.relativePath);
       return new CSVLoadedSuccessResponse(responseMap).serialize();
-    }
-    // TODO: LOG THESE ERRORS
-    catch (FileNotFoundException e) {
+    } catch (FileNotFoundException e) {
       responseMap.put("Error", "CSV file not found");
       responseMap.put("Route", this.relativePath);
       return new CSVFailureResponse(responseMap).serialize();
@@ -163,7 +161,6 @@ public class LoadHandler implements Route {
       this("success", responseMap);
     }
 
-    // TODO conceptualize maybe change (catch json issues)
     String serialize() {
       Moshi moshi = new Moshi.Builder().build();
       JsonAdapter<CSVLoadedSuccessResponse> adapter = moshi.adapter(CSVLoadedSuccessResponse.class);

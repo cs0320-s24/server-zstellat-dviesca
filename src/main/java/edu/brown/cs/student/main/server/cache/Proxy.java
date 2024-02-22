@@ -1,6 +1,5 @@
 package edu.brown.cs.student.main.server.cache;
 
-import edu.brown.cs.student.main.csv.csvoperations.rowoperations.StringRow;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ public class Proxy {
 
   public Proxy() {
     this.stateToCountyCodeMap = new HashMap<>();
-
   }
 
   public Map<String, Map<String, String>> getStateToCountyCodeMap() {
